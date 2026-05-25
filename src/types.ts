@@ -33,3 +33,33 @@ export interface HistoryItem {
   cells: SudokuCell[];
   description: string;
 }
+
+export type ThemeType = 'classic' | 'cosmic' | 'retro' | 'sand' | 'sakura';
+
+export interface ThemeColors {
+  name: string;
+  type: ThemeType;
+  bodyBg: string;
+  headerBg: string;
+  headerBorder: string;
+  textPrimary: string;
+  textSecondary: string;
+  cardBg: string;
+  cardBorder: string;
+  btnPrimary: string;
+  btnSecondary: string;
+  btnAccentBg: string;
+  activeText: string;
+  boardBg: string;
+  boardGridColor: string;
+  boardSubgridBorder: string;
+  cellBg: string;
+  cellGiven: string;
+  cellUser: string;
+  cellSelected: string;
+  cellRelated: string;
+  cellSameValue: string;
+  cellError: string;
+  keypadBtn: string;
+}
+

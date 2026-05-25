@@ -1,6 +1,6 @@
 import React from 'react';
 import { Play, Pause, RefreshCw, Trophy, ShieldAlert, Sparkles, Flame, CheckCircle2 } from 'lucide-react';
-import { Difficulty } from '../types';
+import { Difficulty, ThemeColors } from '../types';
 
 interface HeaderControlsProps {
   difficulty: Difficulty;
@@ -11,6 +11,7 @@ interface HeaderControlsProps {
   onNewGame: () => void;
   onOpenStats: () => void;
   onSolveBoard: () => void;
+  themeColors: ThemeColors;
 }
 
 export default function HeaderControls({
@@ -22,6 +23,7 @@ export default function HeaderControls({
   onNewGame,
   onOpenStats,
   onSolveBoard,
+  themeColors,
 }: HeaderControlsProps) {
   // Format MM:SS helper
   const formatTime = (totalSeconds: number): string => {
@@ -60,10 +62,10 @@ export default function HeaderControls({
   return (
     <div className="w-full max-w-md mx-auto space-y-4" id="header-controls">
       {/* Upper Status Line: Timer & High Level Actions */}
-      <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200/60 shadow-premium" id="status-dashboard-hud">
+      <div className={`flex items-center justify-between ${themeColors.cardBg} p-3 rounded-xl border ${themeColors.cardBorder} shadow-premium transition-all duration-300`} id="status-dashboard-hud">
         {/* Timer Control Panel */}
         <div className="flex items-center gap-2">
-          <div className="bg-slate-50 border border-slate-100 px-3.5 py-1.5 rounded-lg flex items-center gap-2 font-mono-tech text-base md:text-lg font-bold text-slate-800" id="game-timer">
+          <div className={`${themeColors.type === 'retro' ? 'bg-zinc-950 border border-green-950' : 'bg-slate-50 border border-slate-100/40'} px-2.5 md:px-3.5 py-1.5 rounded-lg flex items-center gap-2 font-mono-tech text-sm md:text-base font-bold ${themeColors.type === 'classic' || themeColors.type === 'sand' ? 'text-slate-800' : 'text-slate-200'} justify-center transition-all duration-305`} id="game-timer">
             <span>{formatTime(seconds)}</span>
           </div>
           <button
@@ -71,7 +73,9 @@ export default function HeaderControls({
             className={`p-2 rounded-lg border transition-all duration-200 cursor-pointer ${
               isPaused 
                 ? 'bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100' 
-                : 'bg-slate-50 text-slate-500 border-slate-100 hover:text-slate-700 hover:bg-slate-100'
+                : themeColors.type === 'retro'
+                  ? 'bg-black text-green-500 border-green-950 hover:bg-green-950/20'
+                  : 'bg-slate-50 text-slate-500 border-slate-100/40 hover:text-slate-700 hover:bg-slate-100'
             }`}
             title={isPaused ? "Resume Game" : "Pause Game"}
             id="btn-timer-pause"
@@ -85,7 +89,11 @@ export default function HeaderControls({
           {/* Solve/Check Board */}
           <button
             onClick={onSolveBoard}
-            className="px-3 py-1.5 text-xs font-semibold text-indigo-700 hover:text-white hover:bg-indigo-600 bg-indigo-50 border border-indigo-100 hover:border-indigo-600 rounded-lg transition-all cursor-pointer"
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${
+              themeColors.type === 'retro'
+                ? 'bg-black text-green-500 border-green-950 hover:bg-green-950/30'
+                : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-100/80 hover:border-indigo-600'
+            }`}
             id="btn-auto-solve"
             title="Reveal current puzzle solution"
           >
@@ -95,18 +103,22 @@ export default function HeaderControls({
           {/* New Game trigger */}
           <button
             onClick={onNewGame}
-            className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg shadow-sm border border-slate-900 transition-all cursor-pointer"
+            className={`inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg shadow-sm border transition-all cursor-pointer ${themeColors.btnPrimary}`}
             id="btn-trigger-new-game"
             title="Start a fresh puzzle grid"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className="w-3.5 h-3.5 animate-hover" />
             <span>New Game</span>
           </button>
 
           {/* Stats Dialog trigger */}
           <button
             onClick={onOpenStats}
-            className="p-1 px-2 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors cursor-pointer"
+            className={`p-1 px-2 rounded-lg border transition-colors cursor-pointer ${
+              themeColors.type === 'retro'
+                ? 'bg-black border-green-950 text-green-500 hover:bg-green-950/30'
+                : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+            }`}
             id="btn-open-stats-modal"
             title="View personal statistics"
           >
@@ -117,18 +129,26 @@ export default function HeaderControls({
 
       {/* Level Selection Tabs */}
       <div className="flex flex-col gap-1">
-        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest pl-1">Select Level</span>
-        <div className="grid grid-cols-4 gap-1 bg-slate-200/40 p-1 rounded-xl border border-slate-200/40" id="level-selection-box">
+        <span className={`text-[10px] ${themeColors.type === 'retro' ? 'text-green-600' : 'text-slate-400'} font-bold uppercase tracking-widest pl-1`}>Select Level</span>
+        <div className={`grid grid-cols-4 gap-1 p-1 rounded-xl border ${
+          themeColors.type === 'retro'
+            ? 'bg-black border-green-950/80'
+            : 'bg-slate-200/40 border-slate-200/40'
+        }`} id="level-selection-box">
           {difficulties.map((diff) => (
             <button
               key={diff.id}
               onClick={() => onChangeDifficulty(diff.id)}
               className={`
-                flex items-center justify-center gap-1 py-2 text-xs font-bold rounded-lg transition-all duration-200 cursor-pointer
+                flex items-center justify-center gap-1 py-1.5 md:py-2 text-xs font-bold rounded-lg transition-all duration-200 cursor-pointer
                 ${
                   difficulty === diff.id
-                    ? 'bg-white text-indigo-600 shadow-sm border border-slate-200/60'
-                    : 'text-slate-500 hover:text-slate-800 hover:bg-white/40'
+                    ? themeColors.type === 'retro'
+                      ? 'bg-green-950 text-green-400 border border-green-800 shadow-sm'
+                      : 'bg-white text-indigo-600 shadow-sm border border-slate-200/60'
+                    : themeColors.type === 'retro'
+                      ? 'text-green-800 hover:text-green-500 hover:bg-zinc-950/40'
+                      : 'text-slate-500 hover:text-slate-800 hover:bg-white/40'
                 }
               `}
               id={`tab-level-${diff.id}`}

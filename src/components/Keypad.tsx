@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pencil, Eraser, Undo, Lightbulb } from 'lucide-react';
+import { ThemeColors } from '../types';
 
 interface KeypadProps {
   onNumberClick: (num: number) => void;
@@ -9,6 +10,7 @@ interface KeypadProps {
   pencilMode: boolean;
   onTogglePencil: () => void;
   canUndo: boolean;
+  themeColors: ThemeColors;
 }
 
 export default function Keypad({
@@ -19,6 +21,7 @@ export default function Keypad({
   pencilMode,
   onTogglePencil,
   canUndo,
+  themeColors,
 }: KeypadProps) {
   const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -33,8 +36,8 @@ export default function Keypad({
             flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border transition-all duration-200 cursor-pointer
             ${
               pencilMode
-                ? 'bg-indigo-600 border-indigo-600 text-white shadow-fancy ring-2 ring-indigo-200'
-                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                ? `${themeColors.btnPrimary} ring-2 ring-violet-200/20`
+                : `${themeColors.keypadBtn} opacity-90`
             }
           `}
           title="Toggle Pencil Draft Marks Mode"
@@ -47,7 +50,7 @@ export default function Keypad({
         {/* Clear/Erase Input */}
         <button
           onClick={onErase}
-          className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-all duration-200 cursor-pointer"
+          className={`flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border ${themeColors.keypadBtn} hover:bg-rose-500/10 hover:text-rose-600 hover:border-rose-400/50 transition-all duration-200 cursor-pointer`}
           title="Erase Current Cell"
           id="btn-erase-cell"
         >
@@ -63,8 +66,10 @@ export default function Keypad({
             flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border transition-all duration-200 cursor-pointer
             ${
               canUndo
-                ? 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                : 'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed'
+                ? `${themeColors.keypadBtn}`
+                : themeColors.type === 'retro'
+                  ? 'bg-zinc-950/20 border-green-950 text-green-900/40 cursor-not-allowed opacity-40'
+                  : 'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed opacity-50'
             }
           `}
           title="Undo Last Move"
@@ -77,7 +82,7 @@ export default function Keypad({
         {/* Instant Hint */}
         <button
           onClick={onHint}
-          className="flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200 transition-all duration-200 cursor-pointer"
+          className={`flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border ${themeColors.keypadBtn} hover:bg-amber-500/10 hover:text-amber-500 hover:border-amber-400/50 transition-all duration-200 cursor-pointer`}
           title="Get a Smart Hint"
           id="btn-smart-hint"
         >
@@ -92,7 +97,7 @@ export default function Keypad({
           <button
             key={num}
             onClick={() => onNumberClick(num)}
-            className="aspect-square flex items-center justify-center text-lg md:text-xl font-bold bg-white text-slate-800 rounded-xl border border-slate-200/80 shadow-premium hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300 focus:ring-2 focus:ring-indigo-300 transition-all duration-150 cursor-pointer"
+            className={`aspect-square flex items-center justify-center text-lg md:text-xl font-bold rounded-xl border shadow-premium focus:ring-2 focus:ring-indigo-300 transition-all duration-150 cursor-pointer ${themeColors.keypadBtn} hover:scale-105`}
             id={`btn-digit-${num}`}
           >
             {num}

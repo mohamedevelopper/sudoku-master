@@ -13,7 +13,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 
-import { Difficulty, SudokuCell, GameStats, HistoryItem } from './types';
+import { Difficulty, SudokuCell, GameStats, HistoryItem, ThemeType, ThemeColors } from './types';
 import { 
   generateSudoku, 
   initializeBoard, 
@@ -21,6 +21,7 @@ import {
   isCompletedAndCorrect, 
   findHintCell 
 } from './utils/sudoku';
+import { THEMES } from './utils/themes';
 
 // Component Imports
 import Board from './components/Board';
@@ -118,8 +119,64 @@ const SudokuLogo = () => {
 };
 
 export default function App() {
-  // Navigation tab state
-  const [activeTab, setActiveTab] = useState<'game' | 'privacy'>('game');
+  // Navigation tab state initialized based on URL pathname
+  const [activeTab, setActiveTab] = useState<'game' | 'privacy'>(() => {
+    if (typeof window !== 'undefined' && window.location.pathname.includes('privacypolicy')) {
+      return 'privacy';
+    }
+    return 'game';
+  });
+
+  // Theme selection configuration state with LocalStorage persistence
+  const [theme, setTheme] = useState<ThemeType>(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('sudoku_theme');
+      if (savedTheme && ['classic', 'cosmic', 'retro', 'sand', 'sakura'].includes(savedTheme)) {
+        return savedTheme as ThemeType;
+      }
+    }
+    return 'classic';
+  });
+
+  const changeTheme = (newTheme: ThemeType) => {
+    setTheme(newTheme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sudoku_theme', newTheme);
+    }
+  };
+
+  const themeColors = THEMES[theme] || THEMES.classic;
+
+  // Client-side routing helper with browser History support
+  const navigateTo = (tab: 'game' | 'privacy') => {
+    if (activeTab === tab) return;
+    setActiveTab(tab);
+    if (typeof window !== 'undefined') {
+      if (tab === 'privacy') {
+        window.history.pushState(null, '', '/privacypolicy');
+      } else {
+        window.history.pushState(null, '', '/');
+      }
+    }
+  };
+
+  // Sync state transitions when browser Back/Forward navigation occurs
+  useEffect(() => {
+    const handlePopState = () => {
+      if (typeof window !== 'undefined') {
+        if (window.location.pathname.includes('privacypolicy')) {
+          setActiveTab('privacy');
+        } else {
+          setActiveTab('game');
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
   // Core Sudoku game states
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
@@ -428,13 +485,13 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col justify-between" id="applet-viewport">
+    <div className={`min-h-screen ${themeColors.bodyBg} flex flex-col justify-between transition-colors duration-300 font-sans`} id="applet-viewport">
       
       {/* 1. Global Navigation Frame */}
-      <header className="bg-slate-900 border-b border-slate-800 text-white shadow-lg sticky top-0 z-40 transition-all" id="sudoku-header">
+      <header className={`${themeColors.headerBg} border-b ${themeColors.headerBorder} text-white shadow-lg sticky top-0 z-40 transition-all duration-300`} id="sudoku-header">
         <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
           <button 
-            onClick={() => setActiveTab('game')}
+            onClick={() => navigateTo('game')}
             className="flex items-center gap-3 group focus:outline-none cursor-pointer"
             id="logo-button"
           >
@@ -450,12 +507,12 @@ export default function App() {
           </button>
 
           {/* Nav Selectors */}
-          <nav className="flex items-center gap-1 bg-slate-800 p-1 rounded-xl border border-slate-700">
+          <nav className="flex items-center gap-1 bg-slate-850 p-1 rounded-xl border border-slate-700/60 shadow-inner">
             <button
-              onClick={() => setActiveTab('game')}
+              onClick={() => navigateTo('game')}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all cursor-pointer ${
                 activeTab === 'game'
-                  ? 'bg-indigo-600 text-white shadow-sm'
+                  ? `${themeColors.type === 'retro' ? 'bg-green-950 text-green-400 border border-green-800' : 'bg-indigo-600 text-white shadow-sm'}`
                   : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
               }`}
               id="nav-play-mode"
@@ -463,10 +520,10 @@ export default function App() {
               Play
             </button>
             <button
-              onClick={() => setActiveTab('privacy')}
+              onClick={() => navigateTo('privacy')}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all cursor-pointer ${
                 activeTab === 'privacy'
-                  ? 'bg-indigo-600 text-white shadow-sm'
+                  ? `${themeColors.type === 'retro' ? 'bg-green-950 text-green-400 border border-green-800' : 'bg-indigo-600 text-white shadow-sm'}`
                   : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
               }`}
               id="nav-privacy-mode"
@@ -499,10 +556,14 @@ export default function App() {
                   
                   {/* Hero Intro text block */}
                   <div className="hidden lg:block space-y-2">
-                    <h1 className="text-3xl font-space-shaper font-bold text-slate-900 tracking-tight leading-none">
+                    <h1 className={`text-3.5xl font-space-shaper font-bold ${
+                      theme === 'retro' ? 'text-green-500' : themeColors.textPrimary
+                    } tracking-tight leading-none`}>
                       Sudoku Online
                     </h1>
-                    <p className="text-sm text-slate-500 max-w-sm">
+                    <p className={`text-sm ${
+                      theme === 'retro' ? 'text-green-600/80' : themeColors.textSecondary
+                    } max-w-sm`}>
                       Work your brain muscles with clean logic. Select a difficulty below, use keyboard or numeric keypad to play.
                     </p>
                   </div>
@@ -517,12 +578,72 @@ export default function App() {
                     onNewGame={() => startNewGame(difficulty)}
                     onOpenStats={() => setIsStatsOpen(true)}
                     onSolveBoard={solveActiveBoard}
+                    themeColors={themeColors}
                   />
 
+                  {/* Theme Selector Widget */}
+                  <div className={`${themeColors.cardBg} p-4 rounded-xl border ${themeColors.cardBorder} shadow-premium space-y-3 transition-all duration-300`}>
+                    <div className="flex items-center gap-2">
+                      <Sparkles className={`w-4 h-4 ${themeColors.type === 'retro' ? 'text-green-500' : 'text-indigo-500'}`} />
+                      <span className={`text-[11px] font-bold uppercase tracking-wider ${themeColors.type === 'retro' ? 'text-green-500' : 'text-slate-705'}`}>
+                        Choose Theme: <span className="opacity-80 lowercase font-medium">({themeColors.name})</span>
+                      </span>
+                    </div>
+                    
+                    <div className="grid grid-cols-5 gap-1.5" id="theme-pill-picker">
+                      {(Object.keys(THEMES) as ThemeType[]).map((themeKey) => {
+                        const t = THEMES[themeKey];
+                        const isSelected = theme === themeKey;
+                        
+                        let previewColor = "bg-slate-50 border-slate-300";
+                        if (themeKey === "cosmic") previewColor = "bg-slate-900 border-slate-700";
+                        else if (themeKey === "retro") previewColor = "bg-black border-green-900";
+                        else if (themeKey === "sand") previewColor = "bg-[#faf6f0] border-stone-300";
+                        else if (themeKey === "sakura") previewColor = "bg-rose-50 border-rose-200";
+
+                        return (
+                          <button
+                            key={themeKey}
+                            onClick={() => changeTheme(themeKey)}
+                            className={`flex flex-col items-center gap-1.5 p-1.5 rounded-lg border text-center transition-all cursor-pointer ${
+                              isSelected
+                                ? themeColors.type === 'retro'
+                                  ? 'border-green-500 bg-zinc-950 text-green-400 font-bold'
+                                  : 'border-indigo-500 bg-indigo-50/50 text-indigo-700 font-semibold'
+                                : `${themeColors.type === 'retro' ? 'border-transparent text-green-800' : 'border-slate-250 text-slate-500'} hover:bg-slate-100/10`
+                            }`}
+                            title={t.name}
+                          >
+                            <span className={`w-6 h-6 rounded-full border shadow-sm flex items-center justify-center ${previewColor} transition-transform hover:scale-110`}>
+                              {themeKey === 'classic' && <span className="w-2.5 h-2.5 rounded-full bg-indigo-600" />}
+                              {themeKey === 'cosmic' && <span className="w-2.5 h-2.5 rounded-full bg-slate-400" />}
+                              {themeKey === 'retro' && <span className="w-2.5 h-2.5 rounded-full bg-green-500" />}
+                              {themeKey === 'sand' && <span className="w-2.5 h-2.5 rounded-full bg-amber-800" />}
+                              {themeKey === 'sakura' && <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />}
+                            </span>
+                            <span className="text-[9px] truncate max-w-full font-bold uppercase tracking-tight">
+                              {themeKey}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   {/* Play instructions panel */}
-                  <div className="bg-slate-100/50 p-4 rounded-xl border border-slate-200/40 text-xs text-slate-500 space-y-2">
-                    <p className="font-semibold text-slate-700 flex items-center gap-1.5">
-                      <HelpCircle className="w-4 h-4 text-slate-400" />
+                  <div className={`${
+                    themeColors.type === 'retro' 
+                      ? 'bg-black border border-green-950 text-green-600'
+                      : themeColors.type === 'cosmic'
+                        ? 'bg-slate-900/30 border border-slate-800/80 text-slate-400'
+                        : themeColors.type === 'sand'
+                          ? 'bg-[#fcfaf7] border border-stone-200/80 text-stone-500'
+                          : 'bg-white/80 border border-slate-200/40 text-slate-500'
+                  } p-4 rounded-xl text-xs space-y-2 transition-all duration-300 shadow-sm`} id="shortcuts-panel">
+                    <p className={`font-semibold ${
+                      themeColors.type === 'retro' ? 'text-green-500' : 'text-slate-700'
+                    } flex items-center gap-1.5`}>
+                      <HelpCircle className={`w-4 h-4 ${themeColors.type === 'retro' ? 'text-green-700' : 'text-slate-400'}`} />
                       Pro Shortcuts & Info:
                     </p>
                     <ul className="list-disc pl-5 mt-1 space-y-1">
@@ -543,15 +664,21 @@ export default function App() {
                     {/* Pause sheet overlay */}
                     {isPaused && (
                       <div 
-                        className="absolute inset-2 md:inset-3 rounded-2xl bg-white/70 backdrop-blur-md z-30 flex flex-col items-center justify-center border border-slate-100 p-6 shadow-premium transition-all"
+                        className={`absolute inset-2 md:inset-3 rounded-2xl ${
+                          themeColors.type === 'retro'
+                            ? 'bg-black/95 text-green-500 border-2 border-green-950'
+                            : themeColors.type === 'cosmic'
+                              ? 'bg-slate-950/90 text-slate-200 border border-slate-800'
+                              : 'bg-white/80 text-slate-800 border border-slate-200 shadow-premium'
+                        } backdrop-blur-md z-30 flex flex-col items-center justify-center p-6 shadow-premium transition-all duration-300`}
                         id="pause-layer-blur"
                       >
-                        <Lock className="w-12 h-12 text-slate-400 mb-2 animate-bounce" />
-                        <h3 className="text-xl font-bold text-slate-900">Game Paused</h3>
-                        <p className="text-xs text-slate-400 mt-1 mb-5">Click below to restore the puzzle board</p>
+                        <Lock className={`w-12 h-12 ${themeColors.type === 'retro' ? 'text-green-500' : 'text-slate-400'} mb-2 animate-bounce`} />
+                        <h3 className={`text-xl font-bold ${themeColors.type === 'retro' ? 'text-green-500' : themeColors.textPrimary}`}>Game Paused</h3>
+                        <p className={`text-xs ${themeColors.type === 'retro' ? 'text-green-700' : themeColors.textSecondary} mt-1 mb-5`}>Click below to restore the puzzle board</p>
                         <button
                           onClick={() => setIsPaused(false)}
-                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-fancy text-sm font-semibold transition-transform active:scale-95 cursor-pointer"
+                          className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl shadow-fancy text-sm font-semibold transition-transform active:scale-95 cursor-pointer ${themeColors.btnPrimary}`}
                           id="btn-resume-from-layer"
                         >
                           <Play className="w-4 h-4 fill-current" />
@@ -563,30 +690,40 @@ export default function App() {
                     {/* Confetti or congratulations screen directly on top of board */}
                     {isWon && (
                       <div 
-                        className="absolute inset-2 md:inset-3 rounded-2xl bg-slate-900/95 text-white z-30 flex flex-col items-center justify-center p-6 text-center shadow-xl space-y-4"
+                        className={`absolute inset-2 md:inset-3 rounded-2xl z-30 flex flex-col items-center justify-center p-6 text-center shadow-xl space-y-4 ${
+                          themeColors.type === 'retro'
+                            ? 'bg-black border-2 border-green-500 text-green-400'
+                            : themeColors.type === 'cosmic'
+                              ? 'bg-slate-900 border border-slate-800 text-slate-100'
+                              : 'bg-white border border-slate-200 text-slate-900'
+                        }`}
                         id="victory-achievement-sheet"
                       >
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1, rotate: 360 }}
                           transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                          className="p-4 bg-indigo-500 rounded-full"
+                          className={`p-4 rounded-full ${themeColors.type === 'retro' ? 'bg-green-950 border border-green-500' : 'bg-indigo-500'}`}
                         >
-                          <Trophy className="w-10 h-10 text-amber-300" />
+                          <Trophy className={`w-10 h-10 ${themeColors.type === 'retro' ? 'text-green-400' : 'text-amber-300'}`} />
                         </motion.div>
                         <div className="space-y-1">
-                          <h2 className="text-2xl font-space-shaper font-bold text-white tracking-tight">Congratulations!</h2>
-                          <p className="text-slate-300 text-xs">You successfully completed the {difficulty} puzzle</p>
+                          <h2 className={`text-2xl font-space-shaper font-bold tracking-tight ${themeColors.type === 'retro' ? 'text-green-500' : themeColors.textPrimary}`}>Congratulations!</h2>
+                          <p className={`text-xs ${themeColors.type === 'retro' ? 'text-green-700' : themeColors.textSecondary}`}>You successfully completed the {difficulty} puzzle</p>
                         </div>
 
                         {/* Timing achievement badge */}
-                        <div className="bg-slate-800 px-4 py-2 rounded-xl border border-slate-700 font-mono-tech text-indigo-300 text-sm font-bold">
+                        <div className={`px-4 py-2 rounded-xl text-sm font-bold ${
+                          themeColors.type === 'retro'
+                            ? 'bg-zinc-950 text-green-400 border border-green-850 font-mono-tech'
+                            : 'bg-slate-100 text-slate-800 font-mono-tech'
+                        }`}>
                           Time solved: {Math.floor(seconds / 60)}m {seconds % 60}s
                         </div>
 
                         <button
                           onClick={() => startNewGame(difficulty)}
-                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-premium"
+                          className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-premium ${themeColors.btnPrimary}`}
                           id="victory-btn-new-game"
                         >
                           <span>Play New Board</span>
@@ -604,6 +741,7 @@ export default function App() {
                         setSelectedCellId(id);
                       }}
                       conflictingIds={conflictingCellIds}
+                      themeColors={themeColors}
                     />
                   </div>
 
@@ -616,6 +754,7 @@ export default function App() {
                     pencilMode={pencilMode}
                     onTogglePencil={() => setPencilMode((prev) => !prev)}
                     canUndo={history.length > 0}
+                    themeColors={themeColors}
                   />
                 </div>
               </div>
@@ -632,7 +771,7 @@ export default function App() {
               transition={{ duration: 0.25, ease: 'easeOut' }}
               id="privacy-view-wrap"
             >
-              <PrivacyPolicyComponent onClose={() => setActiveTab('game')} />
+              <PrivacyPolicyComponent onClose={() => navigateTo('game')} />
             </motion.div>
           )}
 
@@ -660,8 +799,8 @@ export default function App() {
           </div>
           <div className="flex flex-col items-center md:items-end gap-2 text-[10px] text-slate-500">
             <div className="flex gap-4">
-              <button onClick={() => setActiveTab('game')} className="hover:text-slate-300">Play Board</button>
-              <button onClick={() => setActiveTab('privacy')} className="hover:text-slate-300">Privacy Policy</button>
+              <button onClick={() => navigateTo('game')} className="hover:text-slate-300">Play Board</button>
+              <button onClick={() => navigateTo('privacy')} className="hover:text-slate-300">Privacy Policy</button>
               <a href="https://sudokumaster.vip" target="_blank" rel="noopener noreferrer" className="hover:text-slate-300">Website</a>
             </div>
             <span>© 2026 Sudoku Master. Built with absolute UI premium design standards by MedySoft Studio.</span>

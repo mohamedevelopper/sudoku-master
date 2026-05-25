@@ -1,11 +1,12 @@
 import React from 'react';
-import { SudokuCell } from '../types';
+import { SudokuCell, ThemeColors } from '../types';
 
 interface BoardProps {
   cells: SudokuCell[];
   selectedCellId: string | null;
   onSelectCell: (id: string) => void;
   conflictingIds: Set<string>;
+  themeColors: ThemeColors;
 }
 
 export default function Board({
@@ -13,6 +14,7 @@ export default function Board({
   selectedCellId,
   onSelectCell,
   conflictingIds,
+  themeColors,
 }: BoardProps) {
   // Find selected cell to do intelligent highlighting
   const selectedCell = cells.find((c) => c.id === selectedCellId);
@@ -40,9 +42,9 @@ export default function Board({
   };
 
   return (
-    <div className="w-full max-w-md mx-auto aspect-square bg-white rounded-2xl shadow-fancy border border-slate-200 p-2 md:p-3 overflow-hidden" id="sudoku-board-container">
+    <div className={`w-full max-w-md mx-auto aspect-square ${themeColors.cardBg} rounded-2xl shadow-premium border ${themeColors.cardBorder} p-2 md:p-3 overflow-hidden transition-all duration-300`} id="sudoku-board-container">
       <div 
-        className="grid grid-cols-9 grid-rows-9 gap-0 w-full h-full border-t border-l border-slate-300 rounded-lg overflow-hidden bg-slate-100" 
+        className={`grid grid-cols-9 grid-rows-9 gap-0 w-full h-full border-t border-l ${themeColors.boardGridColor} rounded-lg overflow-hidden bg-slate-100/5`} 
         id="sudoku-grid"
       >
         {cells.map((cell) => {
@@ -56,23 +58,23 @@ export default function Board({
           const needsBottomBorder = cell.row === 2 || cell.row === 5;
 
           // Compute cell background color classes based on states
-          let bgClass = 'bg-white';
+          let bgClass = themeColors.cellBg;
           if (isSelected) {
-            bgClass = 'bg-indigo-100 text-indigo-950 font-semibold';
+            bgClass = themeColors.cellSelected;
           } else if (hasError) {
-            bgClass = 'bg-rose-100 text-rose-700 animate-pulse';
+            bgClass = themeColors.cellError;
           } else if (hasSameValue) {
-            bgClass = 'bg-violet-100 font-semibold text-violet-900';
+            bgClass = themeColors.cellSameValue;
           } else if (isRelated) {
-            bgClass = 'bg-slate-50/80 text-slate-800';
+            bgClass = themeColors.cellRelated;
           }
 
           // Compute text styles
           const textStyle = cell.given
-            ? 'text-slate-900 font-bold'
+            ? themeColors.cellGiven
             : hasError 
-              ? 'text-rose-600'
-              : 'text-indigo-600 font-medium';
+              ? themeColors.cellError
+              : themeColors.cellUser;
 
           return (
             <button
@@ -81,11 +83,12 @@ export default function Board({
               onClick={() => onSelectCell(cell.id)}
               className={`
                 relative flex items-center justify-center aspect-square select-none outline-none transition-all duration-150 cursor-pointer text-base md:text-xl
-                border-r border-b border-slate-200
-                ${needsRightBorder ? 'border-r-2 border-r-slate-400' : ''}
-                ${needsBottomBorder ? 'border-b-2 border-b-slate-400' : ''}
+                border-r border-b ${themeColors.boardGridColor}
+                ${needsRightBorder ? `border-r-2 ${themeColors.boardSubgridBorder}` : ''}
+                ${needsBottomBorder ? `border-b-2 ${themeColors.boardSubgridBorder}` : ''}
                 ${bgClass} ${textStyle}
-                hover:bg-slate-100 focus:ring-2 focus:ring-indigo-400 focus:z-10
+                ${themeColors.type === 'retro' ? 'font-mono-tech' : ''}
+                focus:ring-2 focus:ring-indigo-400 focus:z-10
               `}
             >
               {/* Value or Notes layer */}
@@ -93,7 +96,7 @@ export default function Board({
                 <span>{cell.value}</span>
               ) : (
                 /* Pencil candidates marks 3x3 layout matrix */
-                <div className="grid grid-cols-3 grid-rows-3 w-full h-full p-0.5 text-[8px] md:text-[10px] text-slate-400 leading-none">
+                <div className="grid grid-cols-3 grid-rows-3 w-full h-full p-0.5 text-[8px] md:text-[10px] text-slate-400 opacity-70 leading-none">
                   {Array.from({ length: 9 }).map((_, index) => {
                     const num = index + 1;
                     const active = cell.candidates.includes(num);
@@ -101,7 +104,9 @@ export default function Board({
                       <div
                         key={num}
                         className={`flex items-center justify-center font-mono-tech ${
-                          active ? 'opacity-100 text-indigo-500 scale-110 font-medium' : 'opacity-0'
+                          active 
+                            ? `opacity-100 ${themeColors.type === 'retro' ? 'text-green-400 font-bold' : 'text-indigo-500 font-medium'} scale-110` 
+                            : 'opacity-0'
                         }`}
                       >
                         {num}
@@ -113,7 +118,7 @@ export default function Board({
 
               {/* Little lock indicator for starting numbers */}
               {cell.given && (
-                <span className="absolute top-0.5 right-0.5 w-1 h-1 bg-slate-400 rounded-full" />
+                <span className={`absolute top-0.5 right-0.5 w-1 h-1 rounded-full ${themeColors.type === 'retro' ? 'bg-green-700' : 'bg-slate-400'}`} />
               )}
             </button>
           );
