@@ -32,10 +32,10 @@ export default function PrivacyPolicyComponent({ onClose }: PrivacyPolicyProps) 
           <section className="border-b border-slate-100 pb-6">
             <h2 className="text-xl font-semibold text-slate-900 mb-3">Overview</h2>
             <p>
-              This Privacy Policy describes how <strong>Sudoku Master</strong> ("we", "our", or "the App") handles information when you use our mobile game available on Google Play or this web site application.
+              This Privacy Policy describes how <strong>Sudoku Master - Classic Puzzle</strong> ("we", "our", or "the App") handles information when you use our mobile game available on Google Play or this web site application.
             </p>
             <p className="mt-3">
-              Sudoku Master values your privacy. We believe that your gaming experience should be fun, uninterrupted, and secure. This policy outlines how any third-party services inside the App process identifiers and network telemetry.
+              Sudoku Master - Classic Puzzle values your privacy. We believe that your gaming experience should be fun, uninterrupted, and secure. This policy outlines how any third-party services inside the App process identifiers and network telemetry.
             </p>
           </section>
 
@@ -44,7 +44,7 @@ export default function PrivacyPolicyComponent({ onClose }: PrivacyPolicyProps) 
             <div className="bg-slate-50 border-l-4 border-slate-400 p-4 rounded-r-lg my-4">
               <p className="font-semibold text-slate-900">Zero Direct Collection</p>
               <p className="text-sm text-slate-600 mt-1">
-                Sudoku Master itself does not collect, store, or share any personal information. No registration is required, and your local high scores or game states are saved directly on your own device.
+                Sudoku Master - Classic Puzzle itself does not collect, store, or share any personal information. No registration is required, and your local high scores or game states are saved directly on your own device.
               </p>
             </div>
             <p>
@@ -117,7 +117,7 @@ export default function PrivacyPolicyComponent({ onClose }: PrivacyPolicyProps) 
           <section className="border-b border-slate-100 pb-6">
             <h2 className="text-xl font-semibold text-slate-900 mb-3">Children's Privacy Protection</h2>
             <p>
-              Sudoku Master is safe for players of all ages, including children. We do not inspect user age groups because we collect zero personal data directly.
+              Sudoku Master - Classic Puzzle is safe for players of all ages, including children. We do not inspect user age groups because we collect zero personal data directly.
             </p>
             <p className="mt-3">
               If a parent or guardian believes their child might have supplied contact information through third-party ad systems, they are welcome to contact us, and we will delete any relevant records. Shown advertisements comply with global policies, including COPPA and GDPR.
