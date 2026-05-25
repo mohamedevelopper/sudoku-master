@@ -37,60 +37,85 @@ const DEFAULT_STATS: GameStats = {
   expert: { gamesPlayed: 0, gamesWon: 0, bestTime: null },
 };
 
-const SudokuLogo = () => (
-  <svg
-    viewBox="0 0 100 100"
-    className="w-10 h-10 select-none drop-shadow-sm flex-shrink-0"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    {/* Background rounded card */}
-    <rect x="0" y="0" width="100" height="100" rx="18" fill="#ffffff" />
-    <rect x="4" y="4" width="92" height="92" rx="14" fill="none" stroke="#e2e8f0" strokeWidth="1.5" />
-    
-    {/* Grid Area */}
-    <rect x="18" y="14" width="64" height="64" rx="4" fill="none" stroke="#2563eb" strokeWidth="2" />
-    
-    {/* Grid sub-divisions (3x3 big blocks lines) */}
-    <line x1="39.3" y1="14" x2="39.3" y2="78" stroke="#2563eb" strokeWidth="1.5" />
-    <line x1="60.6" y1="14" x2="60.6" y2="78" stroke="#2563eb" strokeWidth="1.5" />
-    <line x1="18" y1="35.3" x2="82" y2="35.3" stroke="#2563eb" strokeWidth="1.5" />
-    <line x1="18" y1="56.6" x2="82" y2="56.6" stroke="#2563eb" strokeWidth="1.5" />
+const SudokuLogo = () => {
+  const [imgSrc, setImgSrc] = useState<string>("/favicon/icon0.svg");
+  const [isFallbackSvg, setIsFallbackSvg] = useState(false);
 
-    {/* Thin internal grid lines */}
-    <line x1="25.1" y1="14" x2="25.1" y2="78" stroke="#93c5fd" strokeWidth="0.5" />
-    <line x1="32.2" y1="14" x2="32.2" y2="78" stroke="#93c5fd" strokeWidth="0.5" />
-    <line x1="46.4" y1="14" x2="46.4" y2="78" stroke="#93c5fd" strokeWidth="0.5" />
-    <line x1="53.5" y1="14" x2="53.5" y2="78" stroke="#93c5fd" strokeWidth="0.5" />
-    <line x1="67.7" y1="14" x2="67.7" y2="78" stroke="#93c5fd" strokeWidth="0.5" />
-    <line x1="74.8" y1="14" x2="74.8" y2="78" stroke="#93c5fd" strokeWidth="0.5" />
+  const handleError = () => {
+    if (imgSrc === "/favicon/icon0.svg") {
+      setImgSrc("/favicon/icon1.png");
+    } else {
+      setIsFallbackSvg(true);
+    }
+  };
 
-    <line x1="18" y1="21.1" x2="82" y2="21.1" stroke="#93c5fd" strokeWidth="0.5" />
-    <line x1="18" y1="28.2" x2="82" y2="28.2" stroke="#93c5fd" strokeWidth="0.5" />
-    <line x1="18" y1="42.4" x2="82" y2="42.4" stroke="#93c5fd" strokeWidth="0.5" />
-    <line x1="18" y1="49.5" x2="82" y2="49.5" stroke="#93c5fd" strokeWidth="0.5" />
-    <line x1="18" y1="63.7" x2="82" y2="63.7" stroke="#93c5fd" strokeWidth="0.5" />
-    <line x1="18" y1="70.8" x2="82" y2="70.8" stroke="#93c5fd" strokeWidth="0.5" />
+  if (isFallbackSvg) {
+    return (
+      <svg
+        viewBox="0 0 100 100"
+        className="w-10 h-10 select-none drop-shadow-sm flex-shrink-0"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Background rounded card */}
+        <rect x="0" y="0" width="100" height="100" rx="18" fill="#ffffff" />
+        <rect x="4" y="4" width="92" height="92" rx="14" fill="none" stroke="#e2e8f0" strokeWidth="1.5" />
+        
+        {/* Grid Area */}
+        <rect x="18" y="14" width="64" height="64" rx="4" fill="none" stroke="#2563eb" strokeWidth="2" />
+        
+        {/* Grid sub-divisions (3x3 big blocks lines) */}
+        <line x1="39.3" y1="14" x2="39.3" y2="78" stroke="#2563eb" strokeWidth="1.5" />
+        <line x1="60.6" y1="14" x2="60.6" y2="78" stroke="#2563eb" strokeWidth="1.5" />
+        <line x1="18" y1="35.3" x2="82" y2="35.3" stroke="#2563eb" strokeWidth="1.5" />
+        <line x1="18" y1="56.6" x2="82" y2="56.6" stroke="#2563eb" strokeWidth="1.5" />
 
-    {/* Highlight */}
-    <rect x="74.8" y="70.8" width="7.2" height="7.2" fill="#dbeafe" rx="1" />
+        {/* Thin internal grid lines */}
+        <line x1="25.1" y1="14" x2="25.1" y2="78" stroke="#93c5fd" strokeWidth="0.5" />
+        <line x1="32.2" y1="14" x2="32.2" y2="78" stroke="#93c5fd" strokeWidth="0.5" />
+        <line x1="46.4" y1="14" x2="46.4" y2="78" stroke="#93c5fd" strokeWidth="0.5" />
+        <line x1="53.5" y1="14" x2="53.5" y2="78" stroke="#93c5fd" strokeWidth="0.5" />
+        <line x1="67.7" y1="14" x2="67.7" y2="78" stroke="#93c5fd" strokeWidth="0.5" />
+        <line x1="74.8" y1="14" x2="74.8" y2="78" stroke="#93c5fd" strokeWidth="0.5" />
 
-    {/* Numbers */}
-    <text x="21.5" y="19" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">4</text>
-    <text x="78.4" y="19" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">9</text>
-    <text x="57" y="26" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#ea580c" textAnchor="middle" dominantBaseline="central">8</text>
-    <text x="21.5" y="32.5" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">3</text>
-    <text x="49.9" y="46.5" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#ea580c" textAnchor="middle" dominantBaseline="central">7</text>
-    <text x="78.4" y="46.5" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">1</text>
-    <text x="35.75" y="61" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">6</text>
-    <text x="64.15" y="61" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">5</text>
-    <text x="21.5" y="75" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">2</text>
-    <text x="57" y="75" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">4</text>
-    <text x="78.4" y="75" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">8</text>
+        <line x1="18" y1="21.1" x2="82" y2="21.1" stroke="#93c5fd" strokeWidth="0.5" />
+        <line x1="18" y1="28.2" x2="82" y2="28.2" stroke="#93c5fd" strokeWidth="0.5" />
+        <line x1="18" y1="42.4" x2="82" y2="42.4" stroke="#93c5fd" strokeWidth="0.5" />
+        <line x1="18" y1="49.5" x2="82" y2="49.5" stroke="#93c5fd" strokeWidth="0.5" />
+        <line x1="18" y1="63.7" x2="82" y2="63.7" stroke="#93c5fd" strokeWidth="0.5" />
+        <line x1="18" y1="70.8" x2="82" y2="70.8" stroke="#93c5fd" strokeWidth="0.5" />
 
-    {/* Text "SUDOKU" below the grid */}
-    <text x="50" y="89" fontFamily="system-ui, sans-serif" fontSize="8" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" letterSpacing="1.5">SUDOKU</text>
-  </svg>
-);
+        {/* Highlight */}
+        <rect x="74.8" y="70.8" width="7.2" height="7.2" fill="#dbeafe" rx="1" />
+
+        {/* Numbers */}
+        <text x="21.5" y="19" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">4</text>
+        <text x="78.4" y="19" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">9</text>
+        <text x="57" y="26" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#ea580c" textAnchor="middle" dominantBaseline="central">8</text>
+        <text x="21.5" y="32.5" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">3</text>
+        <text x="49.9" y="46.5" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#ea580c" textAnchor="middle" dominantBaseline="central">7</text>
+        <text x="78.4" y="46.5" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">1</text>
+        <text x="35.75" y="61" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">6</text>
+        <text x="64.15" y="61" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">5</text>
+        <text x="21.5" y="75" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">2</text>
+        <text x="57" y="75" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">4</text>
+        <text x="78.4" y="75" fontFamily="system-ui, sans-serif" fontSize="6.5" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" dominantBaseline="central">8</text>
+
+        {/* Text "SUDOKU" below the grid */}
+        <text x="50" y="89" fontFamily="system-ui, sans-serif" fontSize="8" fontWeight="bold" fill="#1e3a8a" textAnchor="middle" letterSpacing="1.5">SUDOKU</text>
+      </svg>
+    );
+  }
+
+  return (
+    <img
+      src={imgSrc}
+      onError={handleError}
+      alt="Sudoku Master Logo"
+      className="w-10 h-10 object-contain rounded-xl select-none drop-shadow-sm flex-shrink-0"
+      referrerPolicy="no-referrer"
+    />
+  );
+};
 
 export default function App() {
   // Navigation tab state
