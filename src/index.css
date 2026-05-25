@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-plus-jakarta: "Plus Jakarta Sans", "Inter", sans-serif;
+  --font-space-shaper: "Space Grotesk", sans-serif;
+  --font-mono-tech: "JetBrains Mono", monospace;
+  
+  --shadow-premium: 0 4px 30px rgba(0, 0, 0, 0.03);
+  --shadow-fancy: 0 10px 40px -10px rgba(79, 70, 229, 0.12);
+}
+
+body {
+  font-family: var(--font-plus-jakarta);
+  background: radial-gradient(circle at 10% 20%, rgba(248, 250, 252, 1) 0%, rgba(241, 245, 249, 1) 90%);
+  min-height: 100vh;
+}
+
+/* Custom visual pulse for active cellular highlights */
+@keyframes soft-pulse {
+  0%, 100% { background-color: var(--color-indigo-50); }
+  50% { background-color: rgba(224, 231, 255, 0.6); }
+}
+
+.cell-focused {
+  animation: soft-pulse 2s infinite ease-in-out;
+}
