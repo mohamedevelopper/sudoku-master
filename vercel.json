@@ -6,6 +6,10 @@
       "destination": "/privacy/index.html"
     },
     {
+      "source": "/privacypolicy",
+      "destination": "/privacypolicy/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
