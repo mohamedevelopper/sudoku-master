@@ -65,7 +65,7 @@ export default function HeaderControls({
       <div className={`flex items-center justify-between ${themeColors.cardBg} p-3 rounded-xl border ${themeColors.cardBorder} shadow-premium transition-all duration-300`} id="status-dashboard-hud">
         {/* Timer Control Panel */}
         <div className="flex items-center gap-2">
-          <div className={`${themeColors.type === 'retro' ? 'bg-zinc-950 border border-green-950' : 'bg-slate-50 border border-slate-100/40'} px-2.5 md:px-3.5 py-1.5 rounded-lg flex items-center gap-2 font-mono-tech text-sm md:text-base font-bold ${themeColors.type === 'classic' || themeColors.type === 'sand' ? 'text-slate-800' : 'text-slate-200'} justify-center transition-all duration-305`} id="game-timer">
+          <div className={`${themeColors.type === 'retro' ? 'bg-zinc-950 border border-green-950' : 'bg-slate-50 border border-slate-100/40'} px-2.5 md:px-3.5 py-1.5 rounded-lg flex items-center gap-2 font-mono-tech text-sm md:text-base font-bold ${themeColors.type === 'classic' || themeColors.type === 'sand' ? 'text-slate-800' : 'text-slate-200'} justify-center transition-all duration-300`} id="game-timer">
             <span>{formatTime(seconds)}</span>
           </div>
           <button

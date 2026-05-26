@@ -585,7 +585,7 @@ export default function App() {
                   <div className={`${themeColors.cardBg} p-4 rounded-xl border ${themeColors.cardBorder} shadow-premium space-y-3 transition-all duration-300`}>
                     <div className="flex items-center gap-2">
                       <Sparkles className={`w-4 h-4 ${themeColors.type === 'retro' ? 'text-green-500' : 'text-indigo-500'}`} />
-                      <span className={`text-[11px] font-bold uppercase tracking-wider ${themeColors.type === 'retro' ? 'text-green-500' : 'text-slate-705'}`}>
+                      <span className={`text-[11px] font-bold uppercase tracking-wider ${themeColors.type === 'retro' ? 'text-green-500' : 'text-slate-700'}`}>
                         Choose Theme: <span className="opacity-80 lowercase font-medium">({themeColors.name})</span>
                       </span>
                     </div>
@@ -610,7 +610,7 @@ export default function App() {
                                 ? themeColors.type === 'retro'
                                   ? 'border-green-500 bg-zinc-950 text-green-400 font-bold'
                                   : 'border-indigo-500 bg-indigo-50/50 text-indigo-700 font-semibold'
-                                : `${themeColors.type === 'retro' ? 'border-transparent text-green-800' : 'border-slate-250 text-slate-500'} hover:bg-slate-100/10`
+                                : `${themeColors.type === 'retro' ? 'border-transparent text-green-800' : 'border-slate-200 text-slate-500'} hover:bg-slate-100/10`
                             }`}
                             title={t.name}
                           >

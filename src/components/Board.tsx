@@ -12,31 +12,31 @@ const getThemeBorderClasses = (type: string): BorderClasses => {
   switch (type) {
     case 'cosmic':
       return {
-        gridRight: 'border-r border-r-slate-800',
-        gridBottom: 'border-b border-b-slate-800',
-        subgridRight: 'border-r-2 border-r-slate-600',
-        subgridBottom: 'border-b-2 border-b-slate-600',
+        gridRight: 'border-r border-r-slate-800/80',
+        gridBottom: 'border-b border-b-slate-800/80',
+        subgridRight: 'border-r-2 border-r-violet-600',
+        subgridBottom: 'border-b-2 border-b-violet-600',
       };
     case 'retro':
       return {
-        gridRight: 'border-r border-r-green-950',
-        gridBottom: 'border-b border-b-green-950',
-        subgridRight: 'border-r-2 border-r-green-700',
-        subgridBottom: 'border-b-2 border-b-green-700',
+        gridRight: 'border-r border-r-green-950/80',
+        gridBottom: 'border-b border-b-green-950/80',
+        subgridRight: 'border-r-2 border-r-green-500/80',
+        subgridBottom: 'border-b-2 border-b-green-500/80',
       };
     case 'sand':
       return {
         gridRight: 'border-r border-r-stone-200',
         gridBottom: 'border-b border-b-stone-200',
-        subgridRight: 'border-r-2 border-r-stone-400',
-        subgridBottom: 'border-b-2 border-b-stone-400',
+        subgridRight: 'border-r-2 border-r-amber-800/50',
+        subgridBottom: 'border-b-2 border-b-amber-800/50',
       };
     case 'sakura':
       return {
-        gridRight: 'border-r border-r-rose-100/60',
-        gridBottom: 'border-b border-b-rose-100/60',
-        subgridRight: 'border-r-2 border-r-rose-350',
-        subgridBottom: 'border-b-2 border-b-rose-350',
+        gridRight: 'border-r border-r-rose-200/50',
+        gridBottom: 'border-b border-b-rose-200/50',
+        subgridRight: 'border-r-2 border-r-rose-400',
+        subgridBottom: 'border-b-2 border-b-rose-400',
       };
     case 'classic':
     default:
