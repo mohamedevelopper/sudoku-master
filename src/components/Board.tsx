@@ -12,39 +12,39 @@ const getThemeBorderClasses = (type: string): BorderClasses => {
   switch (type) {
     case 'cosmic':
       return {
-        gridRight: 'border-r border-r-slate-800/80',
-        gridBottom: 'border-b border-b-slate-800/80',
-        subgridRight: 'border-r-2 border-r-violet-600',
-        subgridBottom: 'border-b-2 border-b-violet-600',
+        gridRight: 'border-r border-slate-800/80',
+        gridBottom: 'border-b border-slate-800/80',
+        subgridRight: 'border-r-2 border-indigo-500/80',
+        subgridBottom: 'border-b-2 border-indigo-500/80',
       };
     case 'retro':
       return {
-        gridRight: 'border-r border-r-green-950/80',
-        gridBottom: 'border-b border-b-green-950/80',
-        subgridRight: 'border-r-2 border-r-green-500/80',
-        subgridBottom: 'border-b-2 border-b-green-500/80',
+        gridRight: 'border-r border-green-950',
+        gridBottom: 'border-b border-green-950',
+        subgridRight: 'border-r-2 border-green-500',
+        subgridBottom: 'border-b-2 border-green-500',
       };
     case 'sand':
       return {
-        gridRight: 'border-r border-r-stone-200',
-        gridBottom: 'border-b border-b-stone-200',
-        subgridRight: 'border-r-2 border-r-amber-800/50',
-        subgridBottom: 'border-b-2 border-b-amber-800/50',
+        gridRight: 'border-r border-stone-200',
+        gridBottom: 'border-b border-stone-200',
+        subgridRight: 'border-r-2 border-amber-800/80',
+        subgridBottom: 'border-b-2 border-b-amber-800/80',
       };
     case 'sakura':
       return {
-        gridRight: 'border-r border-r-rose-200/50',
-        gridBottom: 'border-b border-b-rose-200/50',
-        subgridRight: 'border-r-2 border-r-rose-400',
-        subgridBottom: 'border-b-2 border-b-rose-400',
+        gridRight: 'border-r border-rose-150',
+        gridBottom: 'border-b border-rose-150',
+        subgridRight: 'border-r-2 border-rose-450',
+        subgridBottom: 'border-b-2 border-rose-450',
       };
     case 'classic':
     default:
       return {
-        gridRight: 'border-r border-r-slate-200',
-        gridBottom: 'border-b border-b-slate-200',
-        subgridRight: 'border-r-2 border-r-slate-400',
-        subgridBottom: 'border-b-2 border-b-slate-400',
+        gridRight: 'border-r border-slate-200',
+        gridBottom: 'border-b border-slate-200',
+        subgridRight: 'border-r-2 border-slate-400',
+        subgridBottom: 'border-b-2 border-slate-400',
       };
   }
 };

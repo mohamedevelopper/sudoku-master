@@ -152,10 +152,15 @@ export default function App() {
     if (activeTab === tab) return;
     setActiveTab(tab);
     if (typeof window !== 'undefined') {
+      const parts = window.location.pathname.split('/');
+      // If deployed in a sub-folder like /sudoku-master/, parts[1] contains the repository name.
+      const base = (parts.length > 2 && parts[1] && parts[1] !== 'privacy' && parts[1] !== 'privacypolicy' && !parts[1].endsWith('.html'))
+        ? `/${parts[1]}`
+        : '';
       if (tab === 'privacy') {
-        window.history.pushState(null, '', '/privacy');
+        window.history.pushState(null, '', `${base}/privacy`);
       } else {
-        window.history.pushState(null, '', '/');
+        window.history.pushState(null, '', `${base}/`);
       }
     }
   };
