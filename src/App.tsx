@@ -540,7 +540,7 @@ export default function App() {
           </button>
 
           {/* Nav Selectors */}
-          <nav className="flex items-center gap-1 bg-slate-850 p-1 rounded-xl border border-slate-700/60 shadow-inner">
+          <nav className="flex items-center gap-1 bg-slate-900/50 p-1 rounded-xl border border-slate-700/60 shadow-inner">
             <button
               onClick={() => navigateTo('game')}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all cursor-pointer ${
