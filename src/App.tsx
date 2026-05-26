@@ -158,7 +158,7 @@ export default function App() {
         ? `/${parts[1]}`
         : '';
       if (tab === 'privacy') {
-        window.history.pushState(null, '', `${base}/privacy`);
+        window.history.pushState(null, '', `${base}/privacypolicy`);
       } else {
         window.history.pushState(null, '', `${base}/`);
       }
