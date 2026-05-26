@@ -10,6 +10,11 @@
   --shadow-fancy: 0 10px 40px -10px rgba(79, 70, 229, 0.12);
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: var(--font-plus-jakarta);
   background: radial-gradient(circle at 10% 20%, rgba(248, 250, 252, 1) 0%, rgba(241, 245, 249, 1) 90%);

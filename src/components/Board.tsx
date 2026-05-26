@@ -29,14 +29,14 @@ const getThemeBorderClasses = (type: string): BorderClasses => {
         gridRight: 'border-r border-stone-200',
         gridBottom: 'border-b border-stone-200',
         subgridRight: 'border-r-2 border-amber-800/80',
-        subgridBottom: 'border-b-2 border-b-amber-800/80',
+        subgridBottom: 'border-b-2 border-amber-800/80',
       };
     case 'sakura':
       return {
-        gridRight: 'border-r border-rose-150',
-        gridBottom: 'border-b border-rose-150',
-        subgridRight: 'border-r-2 border-rose-450',
-        subgridBottom: 'border-b-2 border-rose-450',
+        gridRight: 'border-r border-rose-200',
+        gridBottom: 'border-b border-rose-200',
+        subgridRight: 'border-r-2 border-rose-400',
+        subgridBottom: 'border-b-2 border-rose-400',
       };
     case 'classic':
     default:

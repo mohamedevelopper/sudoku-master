@@ -158,7 +158,7 @@ export default function App() {
         ? `/${parts[1]}`
         : '';
       if (tab === 'privacy') {
-        window.history.pushState(null, '', `${base}/privacypolicy`);
+        window.history.pushState(null, '', `${base}/privacy`);
       } else {
         window.history.pushState(null, '', `${base}/`);
       }
@@ -182,6 +182,34 @@ export default function App() {
       window.removeEventListener('popstate', handlePopState);
     };
   }, []);
+
+  // Sync selected theme classes with HTML and Body elements to prevent high-contrast background leak zones
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const body = document.body;
+      const html = document.documentElement;
+      
+      const allThemeClasses = [
+        'bg-gradient-to-tr', 'from-slate-50', 'to-slate-100', 'text-slate-900',
+        'bg-slate-950', 'text-slate-100',
+        'bg-black', 'text-green-500', 'font-mono-tech',
+        'bg-[#faf6f0]', 'text-stone-900',
+        'from-rose-50', 'to-rose-100/40', 'text-emerald-950'
+      ];
+      
+      allThemeClasses.forEach((cls) => {
+        body.classList.remove(cls);
+        html.classList.remove(cls);
+      });
+
+      themeColors.bodyBg.split(' ').forEach((cls) => {
+        if (cls) {
+          body.classList.add(cls);
+          html.classList.add(cls);
+        }
+      });
+    }
+  }, [themeColors]);
 
   // Core Sudoku game states
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
