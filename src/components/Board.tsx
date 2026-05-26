@@ -1,6 +1,54 @@
 import React from 'react';
 import { SudokuCell, ThemeColors } from '../types';
 
+interface BorderClasses {
+  gridRight: string;
+  gridBottom: string;
+  subgridRight: string;
+  subgridBottom: string;
+}
+
+const getThemeBorderClasses = (type: string): BorderClasses => {
+  switch (type) {
+    case 'cosmic':
+      return {
+        gridRight: 'border-r border-r-slate-800',
+        gridBottom: 'border-b border-b-slate-800',
+        subgridRight: 'border-r-2 border-r-slate-600',
+        subgridBottom: 'border-b-2 border-b-slate-600',
+      };
+    case 'retro':
+      return {
+        gridRight: 'border-r border-r-green-950',
+        gridBottom: 'border-b border-b-green-950',
+        subgridRight: 'border-r-2 border-r-green-700',
+        subgridBottom: 'border-b-2 border-b-green-700',
+      };
+    case 'sand':
+      return {
+        gridRight: 'border-r border-r-stone-200',
+        gridBottom: 'border-b border-b-stone-200',
+        subgridRight: 'border-r-2 border-r-stone-400',
+        subgridBottom: 'border-b-2 border-b-stone-400',
+      };
+    case 'sakura':
+      return {
+        gridRight: 'border-r border-r-rose-100/60',
+        gridBottom: 'border-b border-b-rose-100/60',
+        subgridRight: 'border-r-2 border-r-rose-350',
+        subgridBottom: 'border-b-2 border-b-rose-350',
+      };
+    case 'classic':
+    default:
+      return {
+        gridRight: 'border-r border-r-slate-200',
+        gridBottom: 'border-b border-b-slate-200',
+        subgridRight: 'border-r-2 border-r-slate-400',
+        subgridBottom: 'border-b-2 border-b-slate-400',
+      };
+  }
+};
+
 interface BoardProps {
   cells: SudokuCell[];
   selectedCellId: string | null;
@@ -18,6 +66,8 @@ export default function Board({
 }: BoardProps) {
   // Find selected cell to do intelligent highlighting
   const selectedCell = cells.find((c) => c.id === selectedCellId);
+
+  const borderClasses = getThemeBorderClasses(themeColors.type);
 
   // Helper check if this cell shares row, col or box with the selected cell
   const getIsRelated = (cell: SudokuCell) => {
@@ -83,9 +133,8 @@ export default function Board({
               onClick={() => onSelectCell(cell.id)}
               className={`
                 relative flex items-center justify-center aspect-square select-none outline-none transition-all duration-150 cursor-pointer text-base md:text-xl
-                border-r border-b ${themeColors.boardGridColor}
-                ${needsRightBorder ? `border-r-2 ${themeColors.boardSubgridBorder}` : ''}
-                ${needsBottomBorder ? `border-b-2 ${themeColors.boardSubgridBorder}` : ''}
+                ${needsRightBorder ? borderClasses.subgridRight : borderClasses.gridRight}
+                ${needsBottomBorder ? borderClasses.subgridBottom : borderClasses.gridBottom}
                 ${bgClass} ${textStyle}
                 ${themeColors.type === 'retro' ? 'font-mono-tech' : ''}
                 focus:ring-2 focus:ring-indigo-400 focus:z-10

@@ -121,7 +121,7 @@ const SudokuLogo = () => {
 export default function App() {
   // Navigation tab state initialized based on URL pathname
   const [activeTab, setActiveTab] = useState<'game' | 'privacy'>(() => {
-    if (typeof window !== 'undefined' && window.location.pathname.includes('privacypolicy')) {
+    if (typeof window !== 'undefined' && (window.location.pathname.includes('privacy') || window.location.pathname.includes('privacypolicy'))) {
       return 'privacy';
     }
     return 'game';
@@ -153,7 +153,7 @@ export default function App() {
     setActiveTab(tab);
     if (typeof window !== 'undefined') {
       if (tab === 'privacy') {
-        window.history.pushState(null, '', '/privacypolicy');
+        window.history.pushState(null, '', '/privacy');
       } else {
         window.history.pushState(null, '', '/');
       }
@@ -164,7 +164,7 @@ export default function App() {
   useEffect(() => {
     const handlePopState = () => {
       if (typeof window !== 'undefined') {
-        if (window.location.pathname.includes('privacypolicy')) {
+        if (window.location.pathname.includes('privacy') || window.location.pathname.includes('privacypolicy')) {
           setActiveTab('privacy');
         } else {
           setActiveTab('game');
