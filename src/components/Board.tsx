@@ -1,178 +1,96 @@
-import React from 'react';
-import { SudokuCell, ThemeColors } from '../types';
-
-interface BorderClasses {
-  gridRight: string;
-  gridBottom: string;
-  subgridRight: string;
-  subgridBottom: string;
-}
-
-const getThemeBorderClasses = (type: string): BorderClasses => {
-  switch (type) {
-    case 'cosmic':
-      return {
-        gridRight: 'border-r border-slate-800/80',
-        gridBottom: 'border-b border-slate-800/80',
-        subgridRight: 'border-r-2 border-indigo-500/80',
-        subgridBottom: 'border-b-2 border-indigo-500/80',
-      };
-    case 'retro':
-      return {
-        gridRight: 'border-r border-green-950',
-        gridBottom: 'border-b border-green-950',
-        subgridRight: 'border-r-2 border-green-500',
-        subgridBottom: 'border-b-2 border-green-500',
-      };
-    case 'sand':
-      return {
-        gridRight: 'border-r border-stone-200',
-        gridBottom: 'border-b border-stone-200',
-        subgridRight: 'border-r-2 border-amber-800/80',
-        subgridBottom: 'border-b-2 border-amber-800/80',
-      };
-    case 'sakura':
-      return {
-        gridRight: 'border-r border-rose-200',
-        gridBottom: 'border-b border-rose-200',
-        subgridRight: 'border-r-2 border-rose-400',
-        subgridBottom: 'border-b-2 border-rose-400',
-      };
-    case 'classic':
-    default:
-      return {
-        gridRight: 'border-r border-slate-200',
-        gridBottom: 'border-b border-slate-200',
-        subgridRight: 'border-r-2 border-slate-400',
-        subgridBottom: 'border-b-2 border-slate-400',
-      };
-  }
-};
+import { SudokuCell, GridSize } from '../types';
+import { getBoxDims, cellDisplay } from '../utils/sudoku';
 
 interface BoardProps {
   cells: SudokuCell[];
+  size: GridSize;
   selectedCellId: string | null;
   onSelectCell: (id: string) => void;
   conflictingIds: Set<string>;
-  themeColors: ThemeColors;
+  highlightRelated?: boolean;
+  highlightSameValue?: boolean;
 }
 
 export default function Board({
   cells,
+  size,
   selectedCellId,
   onSelectCell,
   conflictingIds,
-  themeColors,
+  highlightRelated = true,
+  highlightSameValue = true,
 }: BoardProps) {
-  // Find selected cell to do intelligent highlighting
   const selectedCell = cells.find((c) => c.id === selectedCellId);
+  const { boxRows, boxCols } = getBoxDims(size);
 
-  const borderClasses = getThemeBorderClasses(themeColors.type);
-
-  // Helper check if this cell shares row, col or box with the selected cell
-  const getIsRelated = (cell: SudokuCell) => {
-    if (!selectedCell) return false;
-    if (cell.id === selectedCell.id) return false;
-
-    // Check row or column
-    if (cell.row === selectedCell.row || cell.col === selectedCell.col) {
-      return true;
-    }
-
-    // Check 3x3 box
-    const cellBox = Math.floor(cell.row / 3) * 3 + Math.floor(cell.col / 3);
-    const selectedBox = Math.floor(selectedCell.row / 3) * 3 + Math.floor(selectedCell.col / 3);
-    return cellBox === selectedBox;
+  const isRelated = (cell: SudokuCell) => {
+    if (!highlightRelated || !selectedCell || cell.id === selectedCell.id) return false;
+    if (cell.row === selectedCell.row || cell.col === selectedCell.col) return true;
+    return (
+      Math.floor(cell.row / boxRows) === Math.floor(selectedCell.row / boxRows) &&
+      Math.floor(cell.col / boxCols) === Math.floor(selectedCell.col / boxCols)
+    );
   };
 
-  // Check if cell has the same value as the selected cell (where value > 0)
-  const getHasSameValue = (cell: SudokuCell) => {
-    if (!selectedCell || selectedCell.value === 0) return false;
-    return cell.id !== selectedCell.id && cell.value === selectedCell.value;
-  };
+  const sameValue = (cell: SudokuCell) =>
+    highlightSameValue && selectedCell && selectedCell.value !== 0
+      && cell.id !== selectedCell.id && cell.value === selectedCell.value;
 
   return (
-    <div className={`w-full max-w-md mx-auto aspect-square ${themeColors.cardBg} rounded-2xl shadow-premium border ${themeColors.cardBorder} p-2 md:p-3 overflow-hidden transition-all duration-300`} id="sudoku-board-container">
-      <div 
-        className={`grid grid-cols-9 grid-rows-9 gap-0 w-full h-full border-t border-l ${themeColors.boardGridColor} rounded-lg overflow-hidden bg-slate-100/5`} 
-        id="sudoku-grid"
-      >
-        {cells.map((cell) => {
-          const isSelected = cell.id === selectedCellId;
-          const isRelated = getIsRelated(cell);
-          const hasSameValue = getHasSameValue(cell);
-          const hasError = conflictingIds.has(cell.id);
+    <div
+      id="board"
+      data-size={size}
+      role="grid"
+      style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}
+    >
+      {cells.map((cell) => {
+        const isLastCol = cell.col === size - 1;
+        const isLastRow = cell.row === size - 1;
+        // Thick sub-box right border: only at internal box boundaries
+        const isBoxRight  = !isLastCol && (cell.col + 1) % boxCols === 0;
+        const isBoxBottom = !isLastRow && (cell.row + 1) % boxRows === 0;
 
-          // Subgrid borders calculations (3x3 outlines thick borders)
-          const needsRightBorder = cell.col === 2 || cell.col === 5;
-          const needsBottomBorder = cell.row === 2 || cell.row === 5;
+        const cls = ['cell'];
+        if (cell.given) cls.push('given');
+        else if (cell.value > 0) cls.push('user-filled');
+        if (cell.id === selectedCellId) cls.push('selected');
+        else if (isRelated(cell)) cls.push('highlight');
+        if (sameValue(cell)) cls.push('same-num');
+        if (conflictingIds.has(cell.id) || cell.error) cls.push('error');
+        if (cell.hinted) cls.push('hint-flash');
+        if (isBoxRight) cls.push('box-right');
+        if (isBoxBottom) cls.push('box-bottom');
+        if (isLastCol) cls.push('last-col');
+        if (isLastRow) cls.push('last-row');
 
-          // Compute cell background color classes based on states
-          let bgClass = themeColors.cellBg;
-          if (isSelected) {
-            bgClass = themeColors.cellSelected;
-          } else if (hasError) {
-            bgClass = themeColors.cellError;
-          } else if (hasSameValue) {
-            bgClass = themeColors.cellSameValue;
-          } else if (isRelated) {
-            bgClass = themeColors.cellRelated;
-          }
-
-          // Compute text styles
-          const textStyle = cell.given
-            ? themeColors.cellGiven
-            : hasError 
-              ? themeColors.cellError
-              : themeColors.cellUser;
-
-          return (
-            <button
-              key={cell.id}
-              id={cell.id}
-              onClick={() => onSelectCell(cell.id)}
-              className={`
-                relative flex items-center justify-center aspect-square select-none outline-none transition-all duration-150 cursor-pointer text-base md:text-xl
-                ${needsRightBorder ? borderClasses.subgridRight : borderClasses.gridRight}
-                ${needsBottomBorder ? borderClasses.subgridBottom : borderClasses.gridBottom}
-                ${bgClass} ${textStyle}
-                ${themeColors.type === 'retro' ? 'font-mono-tech' : ''}
-                focus:ring-2 focus:ring-indigo-400 focus:z-10
-              `}
-            >
-              {/* Value or Notes layer */}
-              {cell.value > 0 ? (
-                <span>{cell.value}</span>
-              ) : (
-                /* Pencil candidates marks 3x3 layout matrix */
-                <div className="grid grid-cols-3 grid-rows-3 w-full h-full p-0.5 text-[8px] md:text-[10px] text-slate-400 opacity-70 leading-none">
-                  {Array.from({ length: 9 }).map((_, index) => {
-                    const num = index + 1;
-                    const active = cell.candidates.includes(num);
-                    return (
-                      <div
-                        key={num}
-                        className={`flex items-center justify-center font-mono-tech ${
-                          active 
-                            ? `opacity-100 ${themeColors.type === 'retro' ? 'text-green-400 font-bold' : 'text-indigo-500 font-medium'} scale-110` 
-                            : 'opacity-0'
-                        }`}
-                      >
-                        {num}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Little lock indicator for starting numbers */}
-              {cell.given && (
-                <span className={`absolute top-0.5 right-0.5 w-1 h-1 rounded-full ${themeColors.type === 'retro' ? 'bg-green-700' : 'bg-slate-400'}`} />
-              )}
-            </button>
-          );
-        })}
-      </div>
+        // Pencil-mark display
+        const showNotes = cell.value === 0 && cell.candidates.length > 0;
+        return (
+          <div
+            key={cell.id}
+            className={cls.join(' ')}
+            role="gridcell"
+            tabIndex={cell.id === selectedCellId ? 0 : -1}
+            aria-label={`Row ${cell.row + 1}, Column ${cell.col + 1}${cell.given ? `, given ${cell.value}` : cell.value > 0 ? `, ${cell.value}` : ', empty'}`}
+            onClick={() => onSelectCell(cell.id)}
+          >
+            {cell.value > 0 ? (
+              cellDisplay(cell.value, size)
+            ) : showNotes ? (
+              <div className="notes-grid">
+                {Array.from({ length: size }).map((_, i) => {
+                  const n = i + 1;
+                  return (
+                    <span key={n} className="note-num">
+                      {cell.candidates.includes(n) ? cellDisplay(n, size) : ''}
+                    </span>
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
+        );
+      })}
     </div>
   );
 }

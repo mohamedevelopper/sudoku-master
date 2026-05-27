@@ -1,53 +1,41 @@
-import { Difficulty, SudokuCell } from '../types';
+import { Difficulty, GridSize, SudokuCell } from '../types';
 
-// Check if a number can be placed in a standard number[][] grid
-export function isValidInMatrix(matrix: number[][], row: number, col: number, num: number): boolean {
-  // Check row
-  for (let c = 0; c < 9; c++) {
+// Get sub-grid (box) dimensions for a given grid size.
+// 4x4 -> 2x2 boxes, 6x6 -> 2x3 boxes, 9x9 -> 3x3, 12x12 -> 3x4, 16x16 -> 4x4
+export function getBoxDims(size: GridSize): { boxRows: number; boxCols: number } {
+  switch (size) {
+    case 4: return { boxRows: 2, boxCols: 2 };
+    case 6: return { boxRows: 2, boxCols: 3 };
+    case 9: return { boxRows: 3, boxCols: 3 };
+    case 12: return { boxRows: 3, boxCols: 4 };
+    case 16: return { boxRows: 4, boxCols: 4 };
+  }
+}
+
+export function isValidInMatrix(
+  matrix: number[][],
+  row: number,
+  col: number,
+  num: number,
+  size: GridSize
+): boolean {
+  for (let c = 0; c < size; c++) {
     if (matrix[row][c] === num && c !== col) return false;
   }
-
-  // Check column
-  for (let r = 0; r < 9; r++) {
+  for (let r = 0; r < size; r++) {
     if (matrix[r][col] === num && r !== row) return false;
   }
-
-  // Check 3x3 box
-  const boxRowStart = Math.floor(row / 3) * 3;
-  const boxColStart = Math.floor(col / 3) * 3;
-
-  for (let r = boxRowStart; r < boxRowStart + 3; r++) {
-    for (let c = boxColStart; c < boxColStart + 3; c++) {
+  const { boxRows, boxCols } = getBoxDims(size);
+  const boxRowStart = Math.floor(row / boxRows) * boxRows;
+  const boxColStart = Math.floor(col / boxCols) * boxCols;
+  for (let r = boxRowStart; r < boxRowStart + boxRows; r++) {
+    for (let c = boxColStart; c < boxColStart + boxCols; c++) {
       if (matrix[r][c] === num && (r !== row || c !== col)) return false;
     }
   }
-
   return true;
 }
 
-// Backtracking solver for matrices
-export function solveMatrix(matrix: number[][]): boolean {
-  for (let row = 0; row < 9; row++) {
-    for (let col = 0; col < 9; col++) {
-      if (matrix[row][col] === 0) {
-        // Try digits 1-9
-        for (let num = 1; num <= 9; num++) {
-          if (isValidInMatrix(matrix, row, col, num)) {
-            matrix[row][col] = num;
-            if (solveMatrix(matrix)) {
-              return true;
-            }
-            matrix[row][col] = 0; // backtrack
-          }
-        }
-        return false; // trigger backtracking
-      }
-    }
-  }
-  return true; // solved
-}
-
-// Shuffle helper
 function shuffleArray<T>(array: T[]): T[] {
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -57,66 +45,116 @@ function shuffleArray<T>(array: T[]): T[] {
   return arr;
 }
 
-// Fill a 3x3 box on the diagonal starting at (row, col)
-function fillBox(matrix: number[][], row: number, col: number) {
-  const nums = shuffleArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+function solveMatrix(matrix: number[][], size: GridSize): boolean {
+  for (let row = 0; row < size; row++) {
+    for (let col = 0; col < size; col++) {
+      if (matrix[row][col] === 0) {
+        const nums = shuffleArray(Array.from({ length: size }, (_, i) => i + 1));
+        for (const num of nums) {
+          if (isValidInMatrix(matrix, row, col, num, size)) {
+            matrix[row][col] = num;
+            if (solveMatrix(matrix, size)) return true;
+            matrix[row][col] = 0;
+          }
+        }
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+// Deterministic solver (no shuffle) for the uniqueness check
+function deterministicSolve(matrix: number[][], size: GridSize): boolean {
+  for (let row = 0; row < size; row++) {
+    for (let col = 0; col < size; col++) {
+      if (matrix[row][col] === 0) {
+        for (let num = 1; num <= size; num++) {
+          if (isValidInMatrix(matrix, row, col, num, size)) {
+            matrix[row][col] = num;
+            if (deterministicSolve(matrix, size)) return true;
+            matrix[row][col] = 0;
+          }
+        }
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function fillBox(matrix: number[][], row: number, col: number, size: GridSize) {
+  const { boxRows, boxCols } = getBoxDims(size);
+  const nums = shuffleArray(Array.from({ length: size }, (_, i) => i + 1));
   let idx = 0;
-  for (let r = 0; r < 3; r++) {
-    for (let c = 0; c < 3; c++) {
+  for (let r = 0; r < boxRows; r++) {
+    for (let c = 0; c < boxCols; c++) {
       matrix[row + r][col + c] = nums[idx++];
     }
   }
 }
 
-// Generate a complete, solved valid Sudoku matrix
-export function generateFullMatrix(): number[][] {
-  const matrix: number[][] = Array(9)
-    .fill(null)
-    .map(() => Array(9).fill(0));
+export function generateFullMatrix(size: GridSize): number[][] {
+  const matrix: number[][] = Array(size).fill(null).map(() => Array(size).fill(0));
+  const { boxRows, boxCols } = getBoxDims(size);
 
-  // Fill diagonal boxes because they are independent
-  fillBox(matrix, 0, 0);
-  fillBox(matrix, 3, 3);
-  fillBox(matrix, 6, 6);
+  // Fill diagonal boxes since they are independent
+  const numDiagBoxes = Math.min(Math.floor(size / boxRows), Math.floor(size / boxCols));
+  for (let i = 0; i < numDiagBoxes; i++) {
+    fillBox(matrix, i * boxRows, i * boxCols, size);
+  }
 
-  // Solve the rest
-  solveMatrix(matrix);
-
+  solveMatrix(matrix, size);
   return matrix;
 }
 
-// Generate initial puzzle according to difficulty level
-export function generateSudoku(difficulty: Difficulty): {
-  puzzle: number[][];
-  solution: number[][];
-} {
-  const solution = generateFullMatrix();
-  
-  // Clone solution
+// Difficulty config: percentage of cells revealed
+const DIFFICULTY_REVEAL_PCT: Record<Difficulty, number> = {
+  easy: 0.55,
+  medium: 0.42,
+  hard: 0.32,
+  expert: 0.26,
+  master: 0.22,
+  extreme: 0.18,
+};
+
+export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
+  easy: 'Easy',
+  medium: 'Medium',
+  hard: 'Hard',
+  expert: 'Expert',
+  master: 'Master',
+  extreme: 'Extreme',
+};
+
+export const DIFFICULTY_FILL_PCT: Record<Difficulty, number> = {
+  easy: 55,
+  medium: 42,
+  hard: 32,
+  expert: 26,
+  master: 22,
+  extreme: 18,
+};
+
+export function generateSudoku(
+  difficulty: Difficulty,
+  size: GridSize = 9
+): { puzzle: number[][]; solution: number[][] } {
+  const solution = generateFullMatrix(size);
   const puzzle = solution.map((row) => [...row]);
 
-  // Determine how many cells to remove
-  // Easy: ~43 revealed elements (remove 38)
-  // Medium: ~35 revealed elements (remove 46)
-  // Hard: ~27 revealed elements (remove 54)
-  // Expert: ~19 revealed elements (remove 62)
-  let cellsToRemove = 38;
-  if (difficulty === 'medium') cellsToRemove = 46;
-  else if (difficulty === 'hard') cellsToRemove = 54;
-  else if (difficulty === 'expert') cellsToRemove = 62;
+  const totalCells = size * size;
+  const revealPct = DIFFICULTY_REVEAL_PCT[difficulty];
+  const cellsToRemove = Math.floor(totalCells * (1 - revealPct));
 
-  // Create list of all 81 coordinates
   const positions: { r: number; c: number }[] = [];
-  for (let r = 0; r < 9; r++) {
-    for (let c = 0; c < 9; c++) {
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
       positions.push({ r, c });
     }
   }
 
-  // Shuffle coordinates
   const shuffledPositions = shuffleArray(positions);
-
-  // Erase numbers one by one
   for (let i = 0; i < cellsToRemove; i++) {
     const { r, c } = shuffledPositions[i];
     puzzle[r][c] = 0;
@@ -125,11 +163,100 @@ export function generateSudoku(difficulty: Difficulty): {
   return { puzzle, solution };
 }
 
-// Convert number[][] matrix to SudokuCell[] format
-export function initializeBoard(puzzle: number[][]): SudokuCell[] {
+// Deterministic daily puzzle from a date seed
+function seededRandom(seed: number): () => number {
+  let s = seed;
+  return () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+}
+
+export function generateDailyPuzzle(dateStr: string, size: GridSize = 9, difficulty: Difficulty = 'medium'): {
+  puzzle: number[][];
+  solution: number[][];
+} {
+  // Create seed from date string
+  let seed = 0;
+  for (let i = 0; i < dateStr.length; i++) {
+    seed = (seed * 31 + dateStr.charCodeAt(i)) % 2147483647;
+  }
+  // Add grid+difficulty mix so different daily configs differ
+  seed = (seed + size * 17 + difficulty.charCodeAt(0) * 7) % 2147483647;
+
+  const rand = seededRandom(seed);
+
+  // Generate using seeded random
+  const matrix: number[][] = Array(size).fill(null).map(() => Array(size).fill(0));
+
+  const seededShuffle = <T,>(arr: T[]): T[] => {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+
+  const seededSolve = (m: number[][]): boolean => {
+    for (let row = 0; row < size; row++) {
+      for (let col = 0; col < size; col++) {
+        if (m[row][col] === 0) {
+          const nums = seededShuffle(Array.from({ length: size }, (_, i) => i + 1));
+          for (const num of nums) {
+            if (isValidInMatrix(m, row, col, num, size)) {
+              m[row][col] = num;
+              if (seededSolve(m)) return true;
+              m[row][col] = 0;
+            }
+          }
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  const { boxRows, boxCols } = getBoxDims(size);
+  const numDiagBoxes = Math.min(Math.floor(size / boxRows), Math.floor(size / boxCols));
+  for (let i = 0; i < numDiagBoxes; i++) {
+    const nums = seededShuffle(Array.from({ length: size }, (_, k) => k + 1));
+    let idx = 0;
+    for (let r = 0; r < boxRows; r++) {
+      for (let c = 0; c < boxCols; c++) {
+        matrix[i * boxRows + r][i * boxCols + c] = nums[idx++];
+      }
+    }
+  }
+
+  seededSolve(matrix);
+  const solution = matrix.map((row) => [...row]);
+  const puzzle = matrix.map((row) => [...row]);
+
+  const totalCells = size * size;
+  const revealPct = DIFFICULTY_REVEAL_PCT[difficulty];
+  const cellsToRemove = Math.floor(totalCells * (1 - revealPct));
+
+  const positions: { r: number; c: number }[] = [];
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      positions.push({ r, c });
+    }
+  }
+
+  const shuffled = seededShuffle(positions);
+  for (let i = 0; i < cellsToRemove; i++) {
+    const { r, c } = shuffled[i];
+    puzzle[r][c] = 0;
+  }
+
+  return { puzzle, solution };
+}
+
+export function initializeBoard(puzzle: number[][], size: GridSize): SudokuCell[] {
   const cells: SudokuCell[] = [];
-  for (let r = 0; r < 9; r++) {
-    for (let c = 0; c < 9; c++) {
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
       const val = puzzle[r][c];
       cells.push({
         id: `cell-${r}-${c}`,
@@ -145,24 +272,21 @@ export function initializeBoard(puzzle: number[][]): SudokuCell[] {
   return cells;
 }
 
-// Validate the current grid and find conflicting error cells
-export function checkBoardConflicts(cells: SudokuCell[]): Set<string> {
+export function checkBoardConflicts(cells: SudokuCell[], size: GridSize): Set<string> {
   const errorIds = new Set<string>();
+  const { boxRows, boxCols } = getBoxDims(size);
 
-  // Helper arrays of cells grouped by constraints
-  const rows: SudokuCell[][] = Array(9).fill(null).map(() => []);
-  const cols: SudokuCell[][] = Array(9).fill(null).map(() => []);
-  const boxes: SudokuCell[][] = Array(9).fill(null).map(() => []);
+  const rows: SudokuCell[][] = Array(size).fill(null).map(() => []);
+  const cols: SudokuCell[][] = Array(size).fill(null).map(() => []);
+  const boxes: SudokuCell[][] = Array(size).fill(null).map(() => []);
 
   cells.forEach((cell) => {
     rows[cell.row].push(cell);
     cols[cell.col].push(cell);
-    
-    const boxIdx = Math.floor(cell.row / 3) * 3 + Math.floor(cell.col / 3);
-    boxes[boxIdx].push(cell);
+    const boxIdx = Math.floor(cell.row / boxRows) * (size / boxCols) + Math.floor(cell.col / boxCols);
+    boxes[Math.floor(boxIdx)].push(cell);
   });
 
-  // Verify elements in each structural group
   const checkGroup = (group: SudokuCell[]) => {
     const valueMap = new Map<number, SudokuCell[]>();
     group.forEach((cell) => {
@@ -172,7 +296,6 @@ export function checkBoardConflicts(cells: SudokuCell[]): Set<string> {
         valueMap.set(cell.value, valCells);
       }
     });
-
     valueMap.forEach((valCells) => {
       if (valCells.length > 1) {
         valCells.forEach((c) => errorIds.add(c.id));
@@ -187,46 +310,48 @@ export function checkBoardConflicts(cells: SudokuCell[]): Set<string> {
   return errorIds;
 }
 
-// Checks if the puzzle is complete and error-free
 export function isCompletedAndCorrect(cells: SudokuCell[], solution: number[][]): boolean {
-  // Must have no zero-valued elements
   const hasEmptyCell = cells.some((cell) => cell.value === 0);
   if (hasEmptyCell) return false;
-
-  // Compare every cell's value directly with the solution matrix
   return cells.every((cell) => cell.value === solution[cell.row][cell.col]);
 }
 
-// Returns a single hint for an empty or incorrect cell
-export function findHintCell(cells: SudokuCell[], solution: number[][]): { index: number; value: number } | null {
-  // Look for either empty cells or cells that have incorrect (but user-entered) values
+export function findHintCell(
+  cells: SudokuCell[],
+  solution: number[][]
+): { index: number; value: number } | null {
   const candidates: { index: number; value: number }[] = [];
-
   cells.forEach((cell, idx) => {
     if (!cell.given && (cell.value === 0 || cell.value !== solution[cell.row][cell.col])) {
-      candidates.push({
-        index: idx,
-        value: solution[cell.row][cell.col],
-      });
+      candidates.push({ index: idx, value: solution[cell.row][cell.col] });
     }
   });
-
   if (candidates.length === 0) return null;
-
-  // Pick a random incorrect or empty cell to reveal
-  const randomPick = candidates[Math.floor(Math.random() * candidates.length)];
-  return randomPick;
+  return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
-// Convert flat SudokuCell[] to a standard 9x9 matrix (filled cells only, 0 for empty)
-export function cellsToMatrix(cells: SudokuCell[]): number[][] {
-  const matrix: number[][] = Array(9)
-    .fill(null)
-    .map(() => Array(9).fill(0));
-  
+export function cellsToMatrix(cells: SudokuCell[], size: GridSize): number[][] {
+  const matrix: number[][] = Array(size).fill(null).map(() => Array(size).fill(0));
   cells.forEach((cell) => {
     matrix[cell.row][cell.col] = cell.value;
   });
-
   return matrix;
+}
+
+// Display helper: convert a number to symbol (for 16x16 use hex-like A-G)
+export function cellDisplay(value: number, size: GridSize): string {
+  if (value === 0) return '';
+  if (size <= 9) return String(value);
+  if (size === 12) return String(value);
+  // 16x16: 1-9, A-G
+  if (value <= 9) return String(value);
+  return String.fromCharCode('A'.charCodeAt(0) + (value - 10));
+}
+
+export function getTodayDateStr(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
 }

@@ -2,19 +2,115 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sudoku Master - Premium Online Puzzles & Draft Annotations</title>
-    <!-- Favicon Links -->
-    <link rel="icon" type="image/svg+xml" href="/favicon/icon0.svg">
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-    <link rel="shortcut icon" href="/favicon/favicon.ico">
-    <link rel="manifest" href="/favicon/manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#534AB7" />
+
+    <!-- Primary Meta Tags -->
+    <title>Sudoku Master — Free Online Sudoku Puzzles (4×4 to 16×16, 6 Levels)</title>
+    <meta name="title" content="Sudoku Master — Free Online Sudoku Puzzles" />
+    <meta name="description" content="Play free Sudoku online — 4×4, 6×6, 9×9, 12×12, 16×16 grids and 6 difficulty levels from Easy to Extreme. Daily puzzles, leaderboard, printable PDFs, and a complete How to Play guide. No login required." />
+    <meta name="keywords" content="sudoku, sudoku online, free sudoku, sudoku puzzles, daily sudoku, printable sudoku, sudoku 9x9, sudoku 4x4, sudoku 16x16, kids sudoku, easy sudoku, hard sudoku, expert sudoku, sudoku game, play sudoku" />
+    <meta name="author" content="Sudoku Master" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <!-- Google AdSense ownership verification -->
+    <meta name="google-adsense-account" content="ca-pub-5666903425312739">
+
+    <link rel="canonical" href="https://sudokumaster.vip/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sudokumaster.vip/" />
+    <meta property="og:title" content="Sudoku Master — Free Online Sudoku Puzzles" />
+    <meta property="og:description" content="Play free Sudoku online with 5 grid sizes and 6 difficulty levels. Daily puzzles, leaderboard, printable PDFs. No login required." />
+    <meta property="og:image" content="https://sudokumaster.vip/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Sudoku Master" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://sudokumaster.vip/" />
+    <meta name="twitter:title" content="Sudoku Master — Free Online Sudoku Puzzles" />
+    <meta name="twitter:description" content="Play free Sudoku online with 5 grid sizes and 6 difficulty levels. Daily puzzles, leaderboard, printable PDFs." />
+    <meta name="twitter:image" content="https://sudokumaster.vip/og-image.png" />
+
+    <!-- Favicon (PNG-based — uses your custom icon) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="/favicon/favicon.ico" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- PWA / Mobile App -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Sudoku Master" />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Sudoku Master",
+      "url": "https://sudokumaster.vip/",
+      "description": "Free online Sudoku puzzles with multiple grid sizes and difficulty levels. Daily puzzles, leaderboard, and printable PDFs.",
+      "applicationCategory": "GameApplication",
+      "genre": "Puzzle",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <!-- Structured Data: Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Sudoku Master",
+      "url": "https://sudokumaster.vip/",
+      "logo": "https://sudokumaster.vip/favicon/web-app-manifest-512x512.png",
+      "sameAs": []
+    }
+    </script>
+
+    <!-- Google Analytics (GA4) - Real ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D7VDTZY17X"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-D7VDTZY17X', {
+        anonymize_ip: true,
+        cookie_flags: 'SameSite=None;Secure'
+      });
+    </script>
+
+    <!-- Google AdSense - Real Publisher ID -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5666903425312739" crossorigin="anonymous"></script>
+
   </head>
   <body>
+    <noscript>
+      <div style="padding:2rem;text-align:center;font-family:system-ui;">
+        <h1>Sudoku Master</h1>
+        <p>This Sudoku app requires JavaScript to be enabled. Please enable JavaScript and reload the page.</p>
+      </div>
+    </noscript>
     <div id="root"></div>
-    <script type="module" src="./src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

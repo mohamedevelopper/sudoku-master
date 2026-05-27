@@ -1,25 +1,24 @@
-export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert';
+export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert' | 'master' | 'extreme';
+
+export type GridSize = 4 | 6 | 9 | 12 | 16;
+
+export type ThemeType = 'classic' | 'cosmic' | 'retro' | 'sand' | 'sakura' | 'ocean' | 'forest';
 
 export interface SudokuCell {
-  id: string; // "cell-row-col"
-  row: number; // 0 to 8
-  col: number; // 0 to 8
-  value: number; // 0 to 9 (0 is empty)
-  given: boolean; // Is it part of the initial puzzle?
-  candidates: number[]; // Pencil marks (1 to 9)
-  error?: boolean; // Does it conflict with other cells?
-}
-
-export interface DifficultyConfig {
-  label: string;
-  cellsRevealed: number; // Number of cells initially visible
-  color: string;
+  id: string;
+  row: number;
+  col: number;
+  value: number;
+  given: boolean;
+  candidates: number[];
+  error?: boolean;
+  hinted?: boolean;
 }
 
 export interface LevelStats {
   gamesPlayed: number;
   gamesWon: number;
-  bestTime: number | null; // in seconds
+  bestTime: number | null;
 }
 
 export interface GameStats {
@@ -27,6 +26,8 @@ export interface GameStats {
   medium: LevelStats;
   hard: LevelStats;
   expert: LevelStats;
+  master: LevelStats;
+  extreme: LevelStats;
 }
 
 export interface HistoryItem {
@@ -34,32 +35,14 @@ export interface HistoryItem {
   description: string;
 }
 
-export type ThemeType = 'classic' | 'cosmic' | 'retro' | 'sand' | 'sakura';
-
-export interface ThemeColors {
-  name: string;
-  type: ThemeType;
-  bodyBg: string;
-  headerBg: string;
-  headerBorder: string;
-  textPrimary: string;
-  textSecondary: string;
-  cardBg: string;
-  cardBorder: string;
-  btnPrimary: string;
-  btnSecondary: string;
-  btnAccentBg: string;
-  activeText: string;
-  boardBg: string;
-  boardGridColor: string;
-  boardSubgridBorder: string;
-  cellBg: string;
-  cellGiven: string;
-  cellUser: string;
-  cellSelected: string;
-  cellRelated: string;
-  cellSameValue: string;
-  cellError: string;
-  keypadBtn: string;
+export interface DailyStreak {
+  current: number;
+  longest: number;
+  lastPlayed: string | null;
+  completedDates: string[];
 }
 
+export interface AudioSettings {
+  sfxEnabled: boolean;
+  sfxVolume: number;
+}
