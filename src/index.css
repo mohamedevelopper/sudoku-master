@@ -737,31 +737,211 @@ footer {
 .contact-form button:hover { background: var(--c-primary-h); }
 
 /* =============================================
-   RESPONSIVE
+   RESPONSIVE — mobile-first refinements
    ============================================= */
-@media (max-width: 900px) {
+
+/* ---------- TABLET: ≤ 1024px ---------- */
+@media (max-width: 1024px) {
   :root { --sidebar-w: 240px; }
-  .nav-links { display: none; }
+  #main { padding: 16px; }
+  .nav-links a { padding: 6px 10px; font-size: 12px; }
 }
 
+/* ---------- SMALL TABLET / LARGE PHONE: ≤ 900px ---------- */
+@media (max-width: 900px) {
+  :root { --sidebar-w: 240px; --nav-h: 56px; }
+  .nav-links { display: none; }
+  .nav-logo-text { font-size: 14px; }
+  .nav-logo-img, .nav-logo-icon { width: 30px; height: 30px; }
+}
+
+/* ---------- PHONE: ≤ 720px ---------- */
 @media (max-width: 720px) {
+  /* App goes single-column; sidebar becomes a drawer */
   #app { grid-template-columns: 1fr; }
   #sidebar {
     position: fixed; top: var(--nav-h); left: 0;
     height: calc(100vh - var(--nav-h));
-    width: 280px; z-index: 90;
+    width: 280px; max-width: 85vw; z-index: 90;
     transform: translateX(-100%);
-    box-shadow: 4px 0 20px rgba(0,0,0,.15);
+    box-shadow: 4px 0 20px rgba(0,0,0,.25);
   }
   #sidebar.open { transform: translateX(0); }
   #sidebar-overlay {
-    position: fixed; inset: var(--nav-h) 0 0 0; background: rgba(0,0,0,.5);
+    position: fixed; inset: var(--nav-h) 0 0 0;
+    background: rgba(0,0,0,.5);
     z-index: 80; display: none;
   }
   #sidebar-overlay.show { display: block; }
   #menu-toggle { display: flex; }
-  #nav { padding: 0 12px; gap: 8px; }
-  .nav-actions { margin-left: auto; }
+
+  /* Nav: tighten everything */
+  #nav { padding: 0 10px; gap: 6px; }
+  .nav-actions { margin-left: auto; gap: 4px; }
+  .nav-icon-btn { width: 32px; height: 32px; font-size: 14px; }
+
+  /* Main: less padding, take full width */
+  #main { padding: 12px 10px 80px; }
+
+  /* Game header: stack on small screens */
+  .game-header {
+    flex-wrap: wrap; gap: 6px;
+    margin-bottom: 12px;
+  }
+  .game-info h2 { font-size: 14px; }
+  .game-info .game-sub { font-size: 10px; }
+  .game-controls { gap: 6px; flex-wrap: wrap; }
+  .timer-pill { font-size: 12px; padding: 3px 10px; }
+  .hints-pill { font-size: 10px; padding: 3px 8px; }
+  .btn-pause { width: 32px; height: 32px; }
+  .btn-new-game { padding: 6px 12px; font-size: 11px; }
+
+  /* Board: full available width */
+  .board-container { max-width: 100%; }
+  #board { max-width: 100%; border-radius: 4px; }
+
+  /* Cell font sizes adjust for narrower board */
+  #board[data-size="4"]  .cell { font-size: 28px; }
+  #board[data-size="6"]  .cell { font-size: 22px; }
+  #board[data-size="9"]  .cell { font-size: 18px; }
+  #board[data-size="12"] .cell { font-size: 13px; }
+  #board[data-size="16"] .cell { font-size: 10px; }
+
+  /* Numpad: bigger touch targets on mobile */
+  .numpad { gap: 4px; }
+  .num-btn { padding: 12px 0; font-size: 18px; min-height: 44px; }
+
+  /* Actions: smaller buttons */
+  .actions { gap: 6px; margin-bottom: 12px; }
+  .action-btn {
+    padding: 10px 4px; font-size: 11px;
+    min-height: 44px;  /* iOS minimum tap target */
+  }
+
+  /* Progress bar / mistake row stay full width */
+  .progress-wrap, .mistake-row { max-width: 100%; }
+
+  /* Page content (privacy, terms, etc.) */
+  .page-content { padding: 20px 14px 60px; }
+  .page-content h1 { font-size: 22px; }
+  .page-content h2 { font-size: 17px; }
+  .page-content h3 { font-size: 15px; }
+  .page-content p, .page-content li { font-size: 14px; }
+  .page-content .info-card { padding: 12px; }
+
+  /* Modal: full width with padding */
+  .modal-bg { padding: 12px; align-items: flex-start; padding-top: 60px; }
+  .modal { padding: 18px; max-width: 100%; }
+  .modal h3 { font-size: 18px; }
+
+  /* Cookie banner: full bottom width */
+  .cookie-banner {
+    left: 8px; right: 8px; bottom: 8px;
+    padding: 12px; gap: 8px;
+    flex-direction: column; align-items: stretch;
+  }
+  .cookie-text { font-size: 12px; min-width: 0; text-align: center; }
+  .cookie-banner .cookie-btn { width: 100%; padding: 8px; }
+
+  /* Footer: stack vertically and tighten */
+  footer { padding: 24px 14px; margin-top: 24px; }
+  .footer-grid { gap: 18px; grid-template-columns: 1fr 1fr; }
+  .footer-col h4 { font-size: 10px; margin-bottom: 8px; }
+  .footer-col a { font-size: 12px; }
+  .footer-bottom { font-size: 11px; }
+
+  /* Stats modal cards smaller */
+  .leaderboard-stats { grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* Print/quick tiles: 1 column */
+  .print-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .print-tile { padding: 10px; }
+  .print-tile .pt-title { font-size: 13px; }
+
+  /* Leaderboard tiles: 2-3 per row */
+  .lb-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+
+  /* Print board: 1 column on phone */
+  .print-board-wrap { grid-template-columns: 1fr; gap: 14px; }
+
+  /* Coffee button takes less space */
+  .btn-coffee-text { display: none; }
+  .btn-coffee { padding: 6px 8px; font-size: 14px; }
+}
+
+/* ---------- SMALL PHONE: ≤ 480px ---------- */
+@media (max-width: 480px) {
+  :root { --nav-h: 52px; }
+  #main { padding: 10px 8px 80px; }
+
+  /* Logo: just the icon, no text on very small */
+  .nav-logo-text { display: none; }
+
+  /* Game header more compact */
+  .game-header { gap: 4px; }
+  .timer-pill { font-size: 11px; padding: 3px 8px; }
+  .btn-new-game .btn-new-icon { font-size: 14px; }
+
+  /* Cell sizes for tiny screens */
+  #board[data-size="9"]  .cell { font-size: 16px; }
+  #board[data-size="12"] .cell { font-size: 11px; }
+  #board[data-size="16"] .cell { font-size: 9px; }
+
+  /* Numpad packs tighter */
+  .numpad { gap: 3px; }
+  .num-btn { padding: 11px 0; font-size: 16px; }
+
+  /* Footer 1 col on tiny phones */
+  .footer-grid { grid-template-columns: 1fr; gap: 14px; }
+
+  /* Page content padding minimal */
+  .page-content { padding: 14px 10px 50px; }
+  .page-content h1 { font-size: 20px; }
+
+  /* Tiles 1 column */
+  .print-grid, .lb-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Cookie banner: even tighter */
+  .cookie-banner { padding: 10px; }
+
+  /* Sidebar streak banner adapt */
+  .streak-banner { padding: 10px; }
+  .streak-num { font-size: 24px; }
+}
+
+/* ---------- LANDSCAPE PHONE ---------- */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
+  /* In landscape on small phone, board would be huge — cap at 70vh */
+  .board-container { max-width: min(70vh, 100%); }
+  #main { padding: 8px; }
+  .game-header { margin-bottom: 6px; }
+  .progress-wrap, .mistake-row { margin-bottom: 6px; }
+  .numpad { margin-bottom: 6px; }
+  .actions { margin-bottom: 8px; }
+}
+
+/* ---------- TOUCH DEVICE TWEAKS ---------- */
+@media (hover: none) and (pointer: coarse) {
+  /* No hover effects on touch — they get stuck */
+  .cell:hover, .num-btn:hover, .action-btn:hover, .grid-btn:hover,
+  .diff-btn:hover, .nav-icon-btn:hover, .btn-pause:hover,
+  .swatch:hover, .print-tile:hover {
+    transform: none !important;
+    filter: none !important;
+  }
+  /* But keep the active/pressed state for feedback */
+  .num-btn:active, .action-btn:active, .grid-btn:active, .diff-btn:active {
+    transform: scale(0.96) !important;
+    transition: transform 0.05s !important;
+  }
+  /* Bigger tap targets everywhere */
+  .num-btn, .action-btn, .grid-btn, .diff-btn { min-height: 44px; }
+  .nav-icon-btn { min-width: 36px; min-height: 36px; }
+}
+
+/* Prevent zoom on input focus (iOS) — inputs need 16px+ font */
+@media (max-width: 720px) {
+  input, textarea, select { font-size: 16px !important; }
 }
 
 /* =============================================
@@ -798,11 +978,6 @@ footer {
 }
 .btn-coffee:hover { transform: scale(1.06); box-shadow: 0 4px 12px rgba(255,193,7,.4); }
 .btn-coffee:active { transform: scale(0.96); }
-
-@media (max-width: 720px) {
-  .btn-coffee-text { display: none; }
-  .btn-coffee { padding: 6px 9px; }
-}
 
 .support-card {
   display: flex; align-items: center; gap: 10px;

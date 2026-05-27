@@ -2,11 +2,36 @@ import { useEffect, useState } from 'react';
 import { Difficulty, GridSize, ThemeType, DailyStreak } from '../types';
 import { useSudokuGame } from '../utils/useSudokuGame';
 import { loadFromStorage, STORAGE_KEYS } from '../utils/storage';
+import { useSEO } from '../utils/useSEO';
 import Board from '../components/Board';
 import Keypad from '../components/Keypad';
 import { GameHeader, MistakeRow, ProgressBar, Sidebar } from '../components/GameControls';
 import StatsModal from '../components/StatsModal';
 import AdSlot from '../components/AdSlot';
+
+// SEO copy per difficulty page
+const SEO_BY_DIFF: Record<string, { title: string; description: string; canonical: string }> = {
+  easy: {
+    title: 'Easy Sudoku — Play Free Easy Sudoku Online for Beginners | SudokuMaster.vip',
+    description: 'Play free Easy Sudoku puzzles online. Perfect for beginners and kids. 9×9 grid with ~55% of cells filled. No login. New puzzles every visit.',
+    canonical: '/easy-sudoku',
+  },
+  medium: {
+    title: 'Medium Sudoku — Free Online Medium Sudoku Puzzles | SudokuMaster.vip',
+    description: 'Play free Medium Sudoku puzzles online. The perfect difficulty between Easy and Hard — ~40% of cells filled. Train your logic. No login.',
+    canonical: '/medium-sudoku',
+  },
+  hard: {
+    title: 'Hard Sudoku — Free Online Hard Sudoku Puzzles | SudokuMaster.vip',
+    description: 'Play free Hard Sudoku puzzles online. Challenging 9×9 grid with ~30% cells filled. Requires intermediate techniques. No login.',
+    canonical: '/hard-sudoku',
+  },
+  expert: {
+    title: 'Expert Sudoku — Play Hardest Free Expert Sudoku Online | SudokuMaster.vip',
+    description: 'Play free Expert-level Sudoku puzzles online. Very hard 9×9 grid with ~22% cells filled. Master advanced techniques: X-Wing, Swordfish. No login.',
+    canonical: '/expert-sudoku',
+  },
+};
 
 interface PlayPageProps {
   theme: ThemeType;
@@ -62,6 +87,54 @@ export default function PlayPage({
   const [pencilMode, setPencilMode] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // SEO — different for each difficulty landing page
+  const seoData = forceDifficulty && SEO_BY_DIFF[forceDifficulty]
+    ? SEO_BY_DIFF[forceDifficulty]
+    : {
+        title: 'Free Sudoku Online — Play 4×4 to 16×16 Sudoku Puzzles, 6 Levels | SudokuMaster.vip',
+        description: 'Play free Sudoku online — 4×4, 6×6, 9×9, 12×12, and 16×16 grids with 6 difficulty levels from Easy to Extreme. Daily puzzles, leaderboard, printable PDFs. No login required.',
+        canonical: '/',
+      };
+
+  useSEO({
+    title: seoData.title,
+    description: seoData.description,
+    canonicalPath: seoData.canonical,
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        name: 'Sudoku Master',
+        url: 'https://sudokumaster.vip' + seoData.canonical,
+        applicationCategory: 'GameApplication',
+        operatingSystem: 'Any',
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: FAQS.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://sudokumaster.vip/' },
+          ...(forceDifficulty ? [{
+            '@type': 'ListItem',
+            position: 2,
+            name: forceDifficulty.charAt(0).toUpperCase() + forceDifficulty.slice(1) + ' Sudoku',
+            item: 'https://sudokumaster.vip' + seoData.canonical,
+          }] : []),
+        ],
+      },
+    ],
+  });
 
   // Load streak for sidebar display
   const streak = loadFromStorage<DailyStreak>(STORAGE_KEYS.STREAK, {
@@ -160,6 +233,7 @@ export default function PlayPage({
         theme={theme}
         onChangeTheme={onChangeTheme}
         isOpen={sidebarOpen}
+        onClose={() => document.body.classList.remove('sidebar-open')}
       />
 
       <main id="main" role="main">

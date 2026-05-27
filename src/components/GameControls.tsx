@@ -84,6 +84,7 @@ interface SidebarProps {
   theme: string;
   onChangeTheme: (id: any) => void;
   isOpen: boolean;
+  onClose?: () => void;
 }
 
 const ALL_GRIDS: GridSize[] = [4, 6, 9, 12, 16];
@@ -96,8 +97,15 @@ export function Sidebar({
   sfxEnabled, onToggleSfx,
   sfxVolume, onChangeSfxVolume,
   theme, onChangeTheme,
-  isOpen,
+  isOpen, onClose,
 }: SidebarProps) {
+  // Auto-close on mobile after game-changing actions
+  const closeMobile = () => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 720 && onClose) onClose();
+  };
+  const handleGrid = (s: GridSize) => { onChangeGridSize(s); closeMobile(); };
+  const handleDiff = (d: Difficulty) => { onChangeDifficulty(d); closeMobile(); };
+
   const fmtTime = (s: number | null) => {
     if (s === null) return '—';
     const m = Math.floor(s / 60);
@@ -123,7 +131,7 @@ export function Sidebar({
             <button
               key={s}
               className={`grid-btn ${s === gridSize ? 'active' : ''}`}
-              onClick={() => onChangeGridSize(s)}
+              onClick={() => handleGrid(s)}
             >
               {s} × {s}
             </button>
@@ -139,7 +147,7 @@ export function Sidebar({
               key={d}
               data-diff={d}
               className={`diff-btn ${d === difficulty ? 'active' : ''}`}
-              onClick={() => onChangeDifficulty(d)}
+              onClick={() => handleDiff(d)}
             >
               {DIFFICULTY_LABELS[d]} <span className="fill-pct">{DIFFICULTY_FILL_PCT[d]}%</span>
             </button>
