@@ -781,3 +781,57 @@ footer {
   .cell.box-bottom { border-bottom-color: #000 !important; border-bottom-width: 2px !important; }
   .print-board-wrap { display: grid !important; grid-template-columns: 1fr 1fr; gap: 20px; }
 }
+
+/* =============================================
+   SUPPORT / BUY ME A COFFEE
+   ============================================= */
+.btn-coffee {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 20px;
+  background: linear-gradient(135deg, #FFDD00, #FFC107);
+  color: #1a1830; font-size: 12px; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  transition: var(--trans);
+  border: 1px solid rgba(0,0,0,.08);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-coffee:hover { transform: scale(1.06); box-shadow: 0 4px 12px rgba(255,193,7,.4); }
+.btn-coffee:active { transform: scale(0.96); }
+
+@media (max-width: 720px) {
+  .btn-coffee-text { display: none; }
+  .btn-coffee { padding: 6px 9px; }
+}
+
+.support-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px;
+  background: linear-gradient(135deg, #FFF8DC, #FFEEBA);
+  border: 1.5px solid #FFD54F;
+  border-radius: var(--radius);
+  text-decoration: none; cursor: pointer;
+  transition: var(--trans);
+}
+.support-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255,193,7,.3);
+}
+.support-emoji { font-size: 28px; flex-shrink: 0; }
+.support-text { flex: 1; min-width: 0; }
+.support-title {
+  font-size: 13px; font-weight: 600;
+  color: #5d4500; margin-bottom: 2px;
+}
+.support-sub { font-size: 10px; color: #8b6914; }
+
+/* Dark themes: muted gold */
+.theme-dark .support-card,
+.theme-midnight .support-card {
+  background: linear-gradient(135deg, #3a2f0a, #4a3e10);
+  border-color: #806020;
+}
+.theme-dark .support-title,
+.theme-midnight .support-title { color: #FFDD80; }
+.theme-dark .support-sub,
+.theme-midnight .support-sub { color: #c8a958; }

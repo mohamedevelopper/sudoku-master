@@ -1,5 +1,6 @@
 import { Difficulty, GridSize } from '../types';
 import { DIFFICULTY_LABELS, DIFFICULTY_FILL_PCT } from '../utils/sudoku';
+import { SUPPORT_URL, SUPPORT_LABEL, SUPPORT_EMOJI, supportEnabled } from '../utils/support';
 
 interface GameHeaderProps {
   difficulty: Difficulty;
@@ -215,6 +216,32 @@ export function Sidebar({
           </div>
         </div>
       </div>
+
+      <SupportCard />
     </aside>
+  );
+}
+
+function SupportCard() {
+  if (!supportEnabled()) return null;
+  return (
+    <div className="sidebar-section">
+      <a
+        href={SUPPORT_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="support-card"
+        onClick={() => {
+          // @ts-ignore
+          if (window.gtag) window.gtag('event', 'support_click', { source: 'sidebar' });
+        }}
+      >
+        <div className="support-emoji">{SUPPORT_EMOJI}</div>
+        <div className="support-text">
+          <div className="support-title">{SUPPORT_LABEL}</div>
+          <div className="support-sub">Help keep this site free</div>
+        </div>
+      </a>
+    </div>
   );
 }

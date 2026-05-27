@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ThemeType } from '../types';
 import { THEMES, themeClassName } from '../utils/themes';
+import { SUPPORT_URL, SUPPORT_LABEL, SUPPORT_EMOJI, supportEnabled } from '../utils/support';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -72,6 +73,23 @@ export default function Layout({ children, theme, onChangeTheme, sfxEnabled, onT
         </div>
 
         <div className="nav-actions">
+          {supportEnabled() && (
+            <a
+              href={SUPPORT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-coffee"
+              aria-label={SUPPORT_LABEL}
+              title={SUPPORT_LABEL}
+              onClick={() => {
+                // @ts-ignore
+                if (window.gtag) window.gtag('event', 'support_click', { source: 'navbar' });
+              }}
+            >
+              <span style={{ fontSize: 14 }}>{SUPPORT_EMOJI}</span>
+              <span className="btn-coffee-text">Coffee</span>
+            </a>
+          )}
           <button className="nav-icon-btn" onClick={onToggleSfx} aria-label="Toggle sound" title="Toggle sound">
             {sfxEnabled ? '🔊' : '🔇'}
           </button>
@@ -135,6 +153,13 @@ function Footer() {
             <li><Link to="/printable">Printable</Link></li>
             <li><Link to="/about">About</Link></li>
             <li><Link to="/contact">Contact</Link></li>
+            {supportEnabled() && (
+              <li>
+                <a href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">
+                  {SUPPORT_EMOJI} Support us
+                </a>
+              </li>
+            )}
           </ul>
         </div>
         <div className="footer-col">
@@ -148,6 +173,19 @@ function Footer() {
       </div>
       <div className="footer-bottom">
         © 2026 SudokuMaster.vip — Free Online Sudoku. No login. No ads while you think.
+        {supportEnabled() && (
+          <>
+            {' · '}
+            <a
+              href={SUPPORT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'var(--c-primary)', fontWeight: 600 }}
+            >
+              {SUPPORT_EMOJI} {SUPPORT_LABEL}
+            </a>
+          </>
+        )}
       </div>
     </footer>
   );
