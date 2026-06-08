@@ -2,21 +2,6 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/easy-sudoku", "destination": "/easy-sudoku.html" },
-    { "source": "/medium-sudoku", "destination": "/medium-sudoku.html" },
-    { "source": "/hard-sudoku", "destination": "/hard-sudoku.html" },
-    { "source": "/expert-sudoku", "destination": "/expert-sudoku.html" },
-    { "source": "/daily", "destination": "/daily.html" },
-    { "source": "/how-to-play", "destination": "/how-to-play.html" },
-    { "source": "/leaderboard", "destination": "/leaderboard.html" },
-    { "source": "/printable", "destination": "/printable.html" },
-    { "source": "/about", "destination": "/about.html" },
-    { "source": "/contact", "destination": "/contact.html" },
-    { "source": "/privacy", "destination": "/privacy.html" },
-    { "source": "/privacy-policy", "destination": "/privacy.html" },
-    { "source": "/terms", "destination": "/terms.html" },
-    { "source": "/terms-of-service", "destination": "/terms.html" },
-    { "source": "/cookies", "destination": "/cookies.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
