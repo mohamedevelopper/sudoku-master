@@ -1,6 +1,7 @@
 import { Difficulty, GridSize } from '../types';
 import { DIFFICULTY_LABELS, DIFFICULTY_FILL_PCT } from '../utils/sudoku';
 import { SUPPORT_URL, SUPPORT_LABEL, SUPPORT_EMOJI, supportEnabled } from '../utils/support';
+import { AppSidebarCard } from './AppBanner';
 
 interface GameHeaderProps {
   difficulty: Difficulty;
@@ -225,6 +226,7 @@ export function Sidebar({
         </div>
       </div>
 
+      <AppSidebarCard />
       <SupportCard />
     </aside>
   );

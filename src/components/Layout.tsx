@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { ThemeType } from '../types';
 import { THEMES, themeClassName } from '../utils/themes';
 import { SUPPORT_URL, SUPPORT_LABEL, SUPPORT_EMOJI, supportEnabled } from '../utils/support';
+import { PLAY_STORE_URL, playStoreEnabled, trackPlayStoreClick } from '../utils/playstore';
+import { AppBanner, AppNavButton } from './AppBanner';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -49,6 +51,7 @@ export default function Layout({ children, theme, onChangeTheme, sfxEnabled, onT
 
   return (
     <>
+      <AppBanner />
       <nav id="nav" role="navigation">
         <Link to="/" className="nav-logo" aria-label="Sudoku Master Home">
           <img
@@ -73,6 +76,7 @@ export default function Layout({ children, theme, onChangeTheme, sfxEnabled, onT
         </div>
 
         <div className="nav-actions">
+          <AppNavButton />
           {supportEnabled() && (
             <a
               href={SUPPORT_URL}
@@ -153,6 +157,18 @@ function Footer() {
             <li><Link to="/printable">Printable</Link></li>
             <li><Link to="/about">About</Link></li>
             <li><Link to="/contact">Contact</Link></li>
+            {playStoreEnabled() && (
+              <li>
+                <a
+                  href={PLAY_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackPlayStoreClick('footer')}
+                >
+                  📱 Android app
+                </a>
+              </li>
+            )}
             {supportEnabled() && (
               <li>
                 <a href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">

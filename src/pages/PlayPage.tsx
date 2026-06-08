@@ -8,6 +8,7 @@ import Keypad from '../components/Keypad';
 import { GameHeader, MistakeRow, ProgressBar, Sidebar } from '../components/GameControls';
 import StatsModal from '../components/StatsModal';
 import AdSlot from '../components/AdSlot';
+import { AppHomeSection } from '../components/AppBanner';
 
 // SEO copy per difficulty page
 const SEO_BY_DIFF: Record<string, { title: string; description: string; canonical: string }> = {
@@ -326,6 +327,8 @@ export default function PlayPage({
         </div>
 
         <AdSlot slot="2345678901" />
+
+        <AppHomeSection />
 
         <section className="text-section" aria-label="Frequently asked questions">
           <h2>Frequently Asked Questions</h2>
