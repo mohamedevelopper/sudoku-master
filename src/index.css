@@ -81,6 +81,13 @@
   --c-text:#d0f5e8; --c-text2:#5DCAA5; --c-text3:#3a8060;
   --c-box-border:#1D9E75;
 }
+.theme-kids {
+  --c-primary:#2E8BFF; --c-primary-h:#6BB3FF; --c-primary-l:#142a52; --c-primary-ll:#0e1f3d;
+  --c-bg:#0a1024; --c-bg2:#101a36; --c-bg3:#16234a; --c-surface:#101a36;
+  --c-border:#22315c; --c-border2:#3a4d8a;
+  --c-text:#eaf2ff; --c-text2:#9db8e8; --c-text3:#6b84b0;
+  --c-box-border:#F2A93C;
+}
 
 /* =============================================
    RESET
@@ -632,7 +639,8 @@ footer {
   backdrop-filter: blur(4px);
 }
 .theme-dark .board-overlay,
-.theme-midnight .board-overlay { background: rgba(13,13,31,.92); }
+.theme-midnight .board-overlay,
+.theme-kids .board-overlay { background: rgba(13,13,31,.92); }
 .board-overlay h3 { font-size: 22px; font-weight: 700; color: var(--c-text); margin-bottom: 6px; }
 .board-overlay p { font-size: 13px; color: var(--c-text2); margin-bottom: 16px; }
 .board-overlay .btn-resume {
@@ -1008,14 +1016,17 @@ footer {
 
 /* Dark themes: muted gold */
 .theme-dark .support-card,
-.theme-midnight .support-card {
+.theme-midnight .support-card,
+.theme-kids .support-card {
   background: linear-gradient(135deg, #3a2f0a, #4a3e10);
   border-color: #806020;
 }
 .theme-dark .support-title,
-.theme-midnight .support-title { color: #FFDD80; }
+.theme-midnight .support-title,
+.theme-kids .support-title { color: #FFDD80; }
 .theme-dark .support-sub,
-.theme-midnight .support-sub { color: #c8a958; }
+.theme-midnight .support-sub,
+.theme-kids .support-sub { color: #c8a958; }
 
 /* =============================================
 
@@ -1088,9 +1099,16 @@ footer {
   transition: var(--trans);
   box-shadow: 0 4px 12px rgba(0,0,0,.18);
 }
-.app-banner:hover .app-banner-cta {
+.app-banner-cta:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(0,0,0,.25);
+}
+.app-banner-cta-group {
+  display: flex; gap: 8px; flex-shrink: 0;
+}
+.app-banner-cta-sm {
+  padding: 7px 14px; font-size: 12px;
+  gap: 5px;
 }
 .app-banner-close {
   position: absolute; top: 50%; right: 8px;
@@ -1225,7 +1243,13 @@ footer {
   padding: 4px 9px;
   border-radius: 10px;
   align-self: flex-start;
+  text-decoration: none;
 }
+.app-sidebar-cta-group {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-top: 4px;
+}
+.app-sidebar-cta-group .app-sidebar-cta { margin-top: 0; }
 
 /* Dark theme */
 .theme-dark .app-sidebar-card,
@@ -1239,6 +1263,14 @@ footer {
 .theme-midnight .app-sidebar-sub { color: #4DAA85; }
 .theme-dark .app-sidebar-cta,
 .theme-midnight .app-sidebar-cta { background: #1D9E75; color: #fff; }
+
+.theme-kids .app-sidebar-card {
+  background: linear-gradient(135deg, #142a52 0%, #1c3a6e 100%);
+  border-color: #2E8BFF;
+}
+.theme-kids .app-sidebar-title { color: #6BB3FF; }
+.theme-kids .app-sidebar-sub { color: #9db8e8; }
+.theme-kids .app-sidebar-cta { background: #2E8BFF; color: #fff; }
 
 /* =============================================
    APP HOME PROMO SECTION (the big one)
@@ -1296,6 +1328,15 @@ footer {
   margin: 0 auto;
 }
 .app-promo-lede strong { color: var(--c-text); }
+
+.app-promo-banner {
+  display: block;
+  width: 100%; max-width: 100%; height: auto;
+  border-radius: 16px;
+  margin: 20px auto 28px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.25);
+  position: relative; z-index: 1;
+}
 
 .app-promo-grid {
   display: grid;
@@ -1398,17 +1439,22 @@ footer {
   border-top: 1px dashed var(--c-border);
   margin-top: 4px;
 }
-.google-play-badge {
+.store-badges-row {
+  display: flex; flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.google-play-badge, .app-store-badge {
   display: inline-block;
   transition: var(--trans);
   line-height: 0;
   filter: drop-shadow(0 6px 14px rgba(0,0,0,.15));
 }
-.google-play-badge img {
+.google-play-badge img, .app-store-badge svg {
   height: 56px; width: auto; display: block;
 }
-.google-play-badge:hover { transform: scale(1.05); }
-.google-play-badge:active { transform: scale(0.97); }
+.google-play-badge:hover, .app-store-badge:hover { transform: scale(1.05); }
+.google-play-badge:active, .app-store-badge:active { transform: scale(0.97); }
 
 .app-promo-trust {
   display: flex; flex-wrap: wrap;
@@ -1442,5 +1488,6 @@ footer {
   .app-promo-benefit-icon { width: 36px; height: 36px; font-size: 20px; }
   .app-promo-phone-frame { width: 140px; height: 280px; padding: 6px; }
   .app-promo-phone-icon { width: 78px; height: 78px; }
-  .google-play-badge img { height: 50px; }
+  .google-play-badge img, .app-store-badge svg { height: 50px; }
+  .store-badges-row { justify-content: center; }
 }

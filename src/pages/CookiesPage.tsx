@@ -88,6 +88,13 @@ export default function CookiesPage() {
         Note: If you block all cookies, some site features (such as saving your game progress) will stop
         working.
       </p>
+      <p>
+        <strong>iOS and Android apps.</strong> This Cookie Policy covers the <em>website</em> only. Our
+        native apps don't use browser cookies — instead, the Android app uses the Android Advertising ID and
+        the iOS app uses the IDFA (only if you grant permission via Apple's App Tracking Transparency
+        prompt) for ad-related purposes. See our{' '}
+        <Link to="/privacy">Privacy Policy</Link> for details.
+      </p>
 
       <h2>Updates to this policy</h2>
       <p>We may update this policy as our use of cookies changes. The "Last updated" date will reflect any change.</p>

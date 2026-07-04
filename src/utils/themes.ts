@@ -15,6 +15,7 @@ export const THEMES: ThemeInfo[] = [
   { id: 'sand',     name: 'Amber',    className: 'theme-amber',     color: '#854F0B' },
   { id: 'cosmic',   name: 'Dark',     className: 'theme-dark',      color: '#1a1a2e' },
   { id: 'retro',    name: 'Midnight', className: 'theme-midnight',  color: '#030d0a' },
+  { id: 'kids',     name: 'Kids',     className: 'theme-kids',      color: '#0a1024' },
 ];
 
 export function themeClassName(theme: ThemeType): string {

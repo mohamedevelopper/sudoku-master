@@ -6,14 +6,16 @@ export default function PrivacyPage() {
       <div className="crumbs"><Link to="/">Home</Link> › Privacy Policy</div>
       <h1>🛡️ Privacy Policy</h1>
       <p className="lead">
-        <strong>Last updated:</strong> May 26, 2026 · <strong>Effective:</strong> May 26, 2026
+        <strong>Last updated:</strong> July 4, 2026 · <strong>Effective:</strong> July 4, 2026
       </p>
 
       <div className="info-card" style={{ background: 'var(--c-primary-l)', borderColor: 'var(--c-primary)' }}>
         <strong>Quick summary.</strong> Sudoku Master is a free Sudoku game available as a website
-        (sudokumaster.vip) and an Android application. We do not require an account. We collect minimal
-        analytics data, and we show ads via Google AdSense (web) and Google AdMob (Android app) to keep
-        the service free. We do not sell your personal information.
+        (sudokumaster.vip), an Android application, and an iOS application. We do not require an account.
+        We collect minimal analytics data, and we show ads via Google AdSense (web) and Google AdMob
+        (Android and iOS apps) to keep the service free. On iOS, we only use your device's advertising
+        identifier (IDFA) if you grant permission via Apple's App Tracking Transparency prompt — otherwise
+        you'll only see non-personalized ads. We do not sell your personal information.
       </div>
 
       <h2>1. Who we are</h2>
@@ -23,6 +25,7 @@ export default function PrivacyPage() {
       <ul>
         <li>The <strong>website</strong> at <a href="https://sudokumaster.vip">https://sudokumaster.vip</a></li>
         <li>The <strong>Android application</strong> "Sudoku Master" distributed via Google Play</li>
+        <li>The <strong>iOS application</strong> "Sudoku Master" distributed via the Apple App Store</li>
       </ul>
       <p>
         Contact for privacy matters: <a href="mailto:sudokumaster.vip@gmail.com">sudokumaster.vip@gmail.com</a>
@@ -39,7 +42,7 @@ export default function PrivacyPage() {
       <h3>2.2 Locally stored information (on your device)</h3>
       <p>
         We store the following <strong>only on your device</strong> (browser local storage / Android internal
-        storage). This data <strong>never leaves your device</strong> and is never sent to us:
+        storage / iOS app storage). This data <strong>never leaves your device</strong> and is never sent to us:
       </p>
       <ul>
         <li>Your current puzzle progress</li>
@@ -51,8 +54,8 @@ export default function PrivacyPage() {
 
       <h3>2.3 Information collected automatically</h3>
       <p>
-        When you visit our website or use our Android app, the following is collected automatically by our
-        third-party providers (see Section 4):
+        When you visit our website or use our Android or iOS app, the following is collected automatically by
+        our third-party providers (see Section 4):
       </p>
       <ul>
         <li>
@@ -64,8 +67,18 @@ export default function PrivacyPage() {
           which features of the game you use.
         </li>
         <li>
-          <strong>Advertising identifiers (Android app only):</strong> Android Advertising ID for serving ads
+          <strong>Advertising identifier (Android app):</strong> Android Advertising ID for serving ads
           via AdMob. You can reset or limit this in your device settings.
+        </li>
+        <li>
+          <strong>Advertising identifier (iOS app):</strong> On first launch, our iOS app asks for your
+          permission via Apple's <strong>App Tracking Transparency (ATT)</strong> framework before using your
+          device's advertising identifier (IDFA). If you tap "Allow," AdMob may use the IDFA to show more
+          relevant ads and measure ad performance. If you tap "Ask App Not to Track" (or ATT permission is
+          otherwise not granted), we do not access the IDFA — AdMob instead serves{' '}
+          <strong>non-personalized ads</strong> using Apple's <strong>SKAdNetwork</strong> for privacy-preserving
+          install attribution. You can change this choice anytime in{' '}
+          <strong>iOS Settings → Privacy & Security → Tracking</strong>.
         </li>
         <li>
           <strong>IP address:</strong> Used by Google for analytics and ad serving. Google Analytics is
@@ -140,6 +153,26 @@ export default function PrivacyPage() {
       </div>
 
       <div className="info-card">
+        <h3>Google AdMob (iOS app)</h3>
+        <p>
+          <strong>Purpose:</strong> Displaying ads inside the iOS app.<br />
+          <strong>Data:</strong> Device info, app interaction events, and IP address for all users. The IDFA
+          (advertising identifier) is only collected if you grant permission through Apple's{' '}
+          <strong>App Tracking Transparency</strong> prompt — see Section 2.3. Without that permission, AdMob
+          serves non-personalized ads and uses Apple's <strong>SKAdNetwork</strong> for attribution instead of
+          the IDFA.<br />
+          <strong>Privacy:</strong>{' '}
+          <a href="https://support.google.com/admob/answer/6128543" target="_blank" rel="noreferrer noopener">
+            AdMob policies
+          </a>{' '}
+          ·{' '}
+          <a href="https://developer.apple.com/app-store/app-privacy-details/" target="_blank" rel="noreferrer noopener">
+            Apple App Privacy Details
+          </a>
+        </p>
+      </div>
+
+      <div className="info-card">
         <h3>Google Fonts (web)</h3>
         <p>
           <strong>Purpose:</strong> Serving the DM Sans and DM Mono fonts.<br />
@@ -189,20 +222,48 @@ export default function PrivacyPage() {
         <li><strong>Data deletion URL:</strong> <a href="https://sudokumaster.vip/privacy#deletion">https://sudokumaster.vip/privacy#deletion</a></li>
       </ul>
 
-      <h2 id="deletion">7. Your rights and choices</h2>
+      <h2>7. iOS app — Apple App Store "Privacy Nutrition Label" disclosures</h2>
+      <p>
+        The following matches what we disclose in App Store Connect's App Privacy questionnaire:
+      </p>
+      <ul>
+        <li>
+          <strong>Data used to track you:</strong> Identifiers (IDFA) and usage data — only if you grant
+          permission via the App Tracking Transparency prompt. If you decline, no tracking data is collected.
+        </li>
+        <li>
+          <strong>Data linked to you:</strong> None. We do not link any collected data to your identity —
+          there are no accounts or sign-in.
+        </li>
+        <li>
+          <strong>Data not linked to you:</strong> Usage data, diagnostics (crash logs, performance data),
+          and identifiers, collected in aggregate by Google AdMob and used for analytics/advertising as
+          described in Section 4.
+        </li>
+        <li>
+          <strong>Data deletion:</strong> The app has no user accounts. All local data can be deleted by
+          going to iOS Settings → General → iPhone Storage → Sudoku Master → Delete App, or by deleting the
+          app from your home screen.
+        </li>
+      </ul>
+
+      <h2 id="deletion">8. Your rights and choices</h2>
       <p>You have the following rights regarding your data:</p>
       <ul>
         <li>
-          <strong>Delete local data:</strong> Clear your browser's storage for our domain, or in the
-          Android app, go to Settings → Apps → Sudoku Master → Storage → Clear Data, or uninstall the app.
-          This removes all locally stored data and resets your stats and streak.
+          <strong>Delete local data:</strong> Clear your browser's storage for our domain; in the Android
+          app, go to Settings → Apps → Sudoku Master → Storage → Clear Data, or uninstall the app; in the
+          iOS app, delete the app from your home screen. This removes all locally stored data and resets
+          your stats and streak.
         </li>
         <li>
           <strong>Opt out of personalized ads:</strong>{' '}
           <a href="https://adssettings.google.com/" target="_blank" rel="noreferrer noopener">
             Google Ad Settings
           </a>{' '}
-          (web) or Android Settings → Privacy → Ads → Delete advertising ID (app).
+          (web), Android Settings → Privacy → Ads → Delete advertising ID (Android app), or
+          iOS Settings → Privacy & Security → Tracking → toggle off "Allow Apps to Request to Track"
+          (iOS app).
         </li>
         <li>
           <strong>Opt out of analytics:</strong> Decline the analytics cookie in our banner, or install the{' '}
@@ -221,7 +282,7 @@ export default function PrivacyPage() {
         </li>
       </ul>
 
-      <h2>8. Children's privacy</h2>
+      <h2>9. Children's privacy</h2>
       <p>
         Sudoku Master is suitable for all ages, including children. However:
       </p>
@@ -236,12 +297,17 @@ export default function PrivacyPage() {
           tagged as children (<code>tagForChildDirected</code>).
         </li>
         <li>
+          In the iOS app, if the app is designated for children under Apple's Kids Category / App Store
+          guidelines, we configure AdMob to serve only non-personalized ads and skip the App Tracking
+          Transparency prompt entirely, in line with Apple's rules for child-directed apps.
+        </li>
+        <li>
           Parents who believe a child has provided personal information may contact us at{' '}
           <a href="mailto:sudokumaster.vip@gmail.com">sudokumaster.vip@gmail.com</a> for deletion.
         </li>
       </ul>
 
-      <h2>9. Data security</h2>
+      <h2>10. Data security</h2>
       <p>
         We protect data with industry-standard measures:
       </p>
@@ -253,28 +319,28 @@ export default function PrivacyPage() {
         </li>
       </ul>
 
-      <h2>10. International data transfers</h2>
+      <h2>11. International data transfers</h2>
       <p>
         Our third-party providers (primarily Google LLC, based in the United States) may transfer and
         process data outside your country of residence. Google relies on Standard Contractual Clauses and other
         valid transfer mechanisms for international transfers.
       </p>
 
-      <h2>11. Data retention</h2>
+      <h2>12. Data retention</h2>
       <p>
         Locally stored data (on your device) is retained until you clear it. Analytics data retained by Google
         Analytics follows our configured retention period (default: 14 months). Ad-serving data retention
         follows Google's policies.
       </p>
 
-      <h2>12. Changes to this Privacy Policy</h2>
+      <h2>13. Changes to this Privacy Policy</h2>
       <p>
         We may update this Privacy Policy from time to time. When we do, we will update the "Last updated"
         date at the top of this page. Material changes will be highlighted in the app or website. Your
         continued use after changes are posted constitutes acceptance of the updated policy.
       </p>
 
-      <h2>13. Contact us</h2>
+      <h2>14. Contact us</h2>
       <p>
         Questions, concerns, or rights requests? Contact us at:
       </p>
@@ -286,7 +352,8 @@ export default function PrivacyPage() {
 
       <p style={{ fontSize: 11, color: 'var(--c-text3)', marginTop: 32, textAlign: 'center' }}>
         This Privacy Policy is designed to comply with Google AdSense / AdMob program policies, Google Play
-        User Data policy, GDPR, CCPA, COPPA, and similar regulations.
+        User Data policy, Apple App Store Review Guidelines (including App Tracking Transparency), GDPR,
+        CCPA, COPPA, and similar regulations.
       </p>
     </div>
   );

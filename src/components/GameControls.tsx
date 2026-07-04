@@ -195,11 +195,12 @@ export function Sidebar({
             { id: 'sand', color: '#854F0B' },
             { id: 'cosmic', color: '#1a1a2e' },
             { id: 'retro', color: '#030d0a' },
+            { id: 'kids', color: '#0a1024' },
           ].map((t) => (
             <button
               key={t.id}
               className={`swatch ${theme === t.id ? 'active' : ''}`}
-              style={{ background: t.color, border: t.id === 'cosmic' ? '1px solid #534AB7' : t.id === 'retro' ? '1px solid #1D9E75' : undefined }}
+              style={{ background: t.color, border: t.id === 'cosmic' ? '1px solid #534AB7' : t.id === 'retro' ? '1px solid #1D9E75' : t.id === 'kids' ? '1px solid #2E8BFF' : undefined }}
               onClick={() => onChangeTheme(t.id)}
               aria-label={`${t.id} theme`}
               title={t.id}

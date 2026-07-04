@@ -2,7 +2,7 @@ export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert' | 'master' | 'ext
 
 export type GridSize = 4 | 6 | 9 | 12 | 16;
 
-export type ThemeType = 'classic' | 'cosmic' | 'retro' | 'sand' | 'sakura' | 'ocean' | 'forest';
+export type ThemeType = 'classic' | 'cosmic' | 'retro' | 'sand' | 'sakura' | 'ocean' | 'forest' | 'kids';
 
 export interface SudokuCell {
   id: string;
